@@ -1,0 +1,188 @@
+/* 🏠 Główna siatka profilu */
+.user-profile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  width: 80%;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  color: black;
+  min-height: 60vh;
+}
+
+/* 📌 Lewa kolumna */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+/* 📢 Nagłówek */
+.left-column h1 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 📝 Opis użytkownika */
+.left-column p {
+  font-size: 1.2rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+/* ✏️ Przycisk edycji */
+.left-column button {
+  margin-top: 20px;
+  margin-right: 1px;
+  padding: 14px 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+  width: 40%;
+}
+
+.left-column button:hover {
+  background-color: rgb(139, 139, 139, 0.65);
+}
+
+/* ⭐ Sekcja oceniania */
+.rating-section {
+  background-color: #f9f9f9;
+  padding: 20px;
+  height: 120px;
+  border-radius: 8px;
+  text-align: center;
+  width: 80%;
+  margin-top: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.rating-section h3 {
+  margin-bottom: 0px;
+}
+
+/* Gwiazdki */
+.stars-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.stars-container .star {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.stars-container .star:hover,
+.stars-container .star.filled {
+  color: #ffcc00;
+}
+
+/* 🔘 Guzik „Napisz wiadomość” */
+.message-button {
+  margin-top: 20px;
+  padding: 14px 24px;
+  font-size: 1.2rem;
+  color: white;
+  background-color: rgba(208, 147, 5, 0.8);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+  margin-top: 30px;
+}
+
+.message-button:hover {
+  background-color: rgba(208, 147, 5, 0.6);
+}
+
+/* 📑 Prawa kolumna */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 📌 Ogłoszenia */
+.announcements-list {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  text-align: center;
+}
+
+/* Lista ogłoszeń */
+.announcements-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.announcements-list li {
+  font-size: 1.2rem;
+  color: #28313b;
+  padding: 8px;
+  transition: color 0.3s;
+}
+
+.announcements-list li:hover {
+  color: #0056b3;
+}
+
+/* 🛑 Zablokowane konto */
+.blocked-overlay {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #ffe5e5;
+  border: 1px solid #ffcccc;
+  color: #cc0000;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 🛠️ Przycisk admina */
+.toggle-block-button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  background-color: #b00020;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-block-button:hover {
+  background-color: #7b0015;
+}
+
+/* 📱 Responsywność */
+@media (max-width: 768px) {
+  .user-profile {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .rating-section,
+  .announcements-list {
+    width: 100%;
+  }
+}

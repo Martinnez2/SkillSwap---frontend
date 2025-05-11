@@ -1,0 +1,64 @@
+.user-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 50px;
+  font-family: Arial, sans-serif;
+  color: #000;
+  height: 90vh;
+}
+
+.user-page h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.user-page p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.user-page strong {
+  font-weight: 600;
+}
+
+.user-page button {
+  margin-top: 15px;
+  padding: 10px 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.user-page button:hover {
+  background-color: #0056b3;
+}
+
+.user-page.blocked {
+  pointer-events: none;
+  opacity: 0.4;
+  position: relative;
+}
+
+.user-page .toggle-block-button {
+  pointer-events: auto;
+  opacity: 1;
+  position: relative;
+}
+
+.blocked-overlay {
+  pointer-events: auto;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 0, 0, 0.85);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 12px;
+  font-size: 20px;
+  z-index: 1000;
+}
+

@@ -1,0 +1,56 @@
+.announcement-details {
+  width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  color: black;
+  text-align: left;
+}
+
+.announcement-details__title {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.announcement-details__description {
+  margin-bottom: 15px;
+}
+
+.announcement-details__author,
+.announcement-details__date,
+.announcement-details__visibility {
+  margin-bottom: 5px;
+}
+
+.announcement-details__title--highlighted {
+  color: #007bff;
+}
+
+.announcement-details__author-name {
+  color: black; /* Domyślny kolor czarny */
+  cursor: pointer; /* Kursor wskazujący na link */
+}
+
+.announcement-details__author-name:hover {
+  color: #6f42c1; /* Fioletowy kolor na hover */
+}
+
+.announcement-button {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.button-profile {
+  padding: 10px 20px;
+  font-size: 1.1em;
+  color: #fff;
+  background-color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-profile:hover {
+  background-color: rgb(139, 139, 139, 0.65);
+  color: black;
+}

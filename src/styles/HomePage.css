@@ -1,0 +1,133 @@
+.home-container {
+  font-family: Arial, sans-serif;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  width: 1000px;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.logo {
+  max-width: 200px;
+  height: auto;
+}
+
+.hero {
+  background-color: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  flex: 1;
+  min-width: 350px;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.hero p {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: left;
+  gap: 20px;
+}
+
+.register-button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 2px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+  background-color: rgb(139, 139, 139);
+}
+
+.community-offer {
+  background-color: #ffffff;
+  border-radius: 10px;
+
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
+  margin-top: 20px;
+  width: 1000px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  max-width: 900px;
+  text-align: left;
+}
+
+.community-offer h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.community-offer ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.community-offer li {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.community-offer li strong {
+  color: #007bff;
+}
+
+.action-button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: rgb(139, 139, 139, 0.65);
+  color: black;
+}

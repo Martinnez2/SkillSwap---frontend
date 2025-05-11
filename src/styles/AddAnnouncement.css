@@ -1,0 +1,89 @@
+.add-announcement-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  background-color: #ffffff;
+  color: black;
+  padding: 20px;
+}
+
+.form-box {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+}
+
+.form-box h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.form-left,
+.form-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-box label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: 500;
+}
+
+.form-box input,
+.form-box select,
+.form-box textarea {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: rgb(222, 222, 222);
+  color: black;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.description-textarea {
+  min-height: 240px;
+  resize: vertical;
+}
+
+.submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.form-box button {
+  padding: 10px 20px;
+  background-color: #000000;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-box button:hover {
+  background-color: #005fd1;
+}
+
+.form-intro {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #555;
+}
