@@ -25,6 +25,8 @@ const AnnouncementDetails = () => {
     }
   }, [id]);
 
+  const isAdmin = loggedInUser?.role === "ADMIN";
+  
   const handleDelete = () => {
     if (!loggedInUser) {
       console.error("No logged in user found.");
@@ -36,7 +38,7 @@ const AnnouncementDetails = () => {
     );
 
     if (confirmation) {
-      if (loggedInUser.id === announcement.userId) {
+      if ((loggedInUser.id === announcement.userId) || isAdmin) {
         const updatedAnnouncements = deleteAnnouncement(announcement.id);
 
         if (updatedAnnouncements) {
@@ -87,27 +89,38 @@ const AnnouncementDetails = () => {
         <p>{announcement.description}</p>
       </div>
 
-      {author && loggedInUser?.username === author.username && (
+      {author && (
         <div className="announcement-button-group">
-          <Link
-            to={`/edit-announcement/${announcement.id}`}
-            className="button-edit"
-          >
-            Edytuj ogłoszenie
-          </Link>
-          <button onClick={handleDelete} className="button-delete">
-            Usuń ogłoszenie
-          </button>
+          {loggedInUser?.username === author.username && (
+            <>
+              <Link
+                to={`/edit-announcement/${announcement.id}`}
+                className="button-edit"
+              >
+                Edytuj ogłoszenie
+              </Link>
+              <button onClick={handleDelete} className="button-delete">
+                Usuń ogłoszenie
+              </button>
+            </>
+          )}
+
+          {loggedInUser?.username !== author.username && (
+            <Link to={`/userView/${author.id}`} className="button-profile">
+              Zobacz profil
+            </Link>
+          )}
+
+          {isAdmin && loggedInUser?.username !== author.username && (
+            <button onClick={handleDelete} className="button-delete">
+              Usuń ogłoszenie
+            </button>
+          )}
+
+          
         </div>
       )}
 
-      {author && loggedInUser?.username !== author.username && (
-        <div className="announcement-button-group">
-          <Link to={`/userView/${author.id}`} className="button-profile">
-            Zobacz profil
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

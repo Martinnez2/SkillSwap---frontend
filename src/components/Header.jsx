@@ -21,6 +21,9 @@ const Header = () => {
         <Link to="/announcements" className="nav-link">
           Ogłoszenia
         </Link>
+        <Link to="/usersList" className="nav-link">
+          Użytkownicy
+        </Link>
       </div>
       <div className="header-right">
         {/* Sprawdzamy, czy użytkownik jest zalogowany */}

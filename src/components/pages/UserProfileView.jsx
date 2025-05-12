@@ -120,6 +120,11 @@ const UserProfileView = () => {
         <h1>
           {user.name} {user.surname}
         </h1>
+        {isAdmin &&(
+          <p>
+            {user.email}
+          </p>
+        )}
 
         <div>
           <p className="average-rating">
@@ -187,7 +192,7 @@ const UserProfileView = () => {
           )}
         </div>
 
-        {!isOwnProfile && !isBlocked && (
+        {!isOwnProfile && !isBlocked && !isAdmin && (
           <>
             <div className="rating-section">
               <h3>Oceń tego użytkownika</h3>

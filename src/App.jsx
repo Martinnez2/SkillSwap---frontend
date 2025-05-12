@@ -13,6 +13,7 @@ import AdminPanel from "./components/pages/AdminPanel";
 import UserProfileView from "./components/pages/UserProfileView";
 import UserChat from "./components/pages/UserChat";
 import EditAnnouncement from "./components/Announcement/EditAnnouncement";
+import UsersList from "./components/pages/UsersList.jsx";
 
 // import "./App.css";
 
@@ -39,6 +40,7 @@ const App = () => {
               path="/edit-announcement/:id"
               element={<EditAnnouncement />}
             />
+            <Route path="/usersList" element={<UsersList />} />
           </Routes>
         </div>
       </div>

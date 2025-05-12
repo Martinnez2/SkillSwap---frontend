@@ -10,7 +10,7 @@ import {
   getAnnouncements,
   deleteAnnouncement,
 } from "../../services/announcementService";
-import { toggleUserStatus } from "../../services/userUtils"; // Importowanie funkcji
+import { toggleUserStatus } from "../../services/userUtils"; 
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -23,10 +23,9 @@ const AdminPanel = () => {
   }, []);
 
   const handleBlock = (user) => {
-    // Wywołanie toggleUserStatus, które zmienia status użytkownika i usuwa ogłoszenia, jeśli jest blokowany
     const updatedUser = toggleUserStatus(
       user,
-      user.status === "blocked", // Zmieniamy status na 'blocked' lub 'active'
+      user.status === "blocked", 
       updateUserStatus,
       deleteAnnouncement,
       getAnnouncements
@@ -63,7 +62,7 @@ const AdminPanel = () => {
   const sortedUsers = [...users]
     .filter((u) => u.role !== "ADMIN")
     .filter((u) =>
-      `${u.name} ${u.surname} ${u.username}`
+      `${u.name} ${u.surname} ${u.username} ${u.email}`
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     )
@@ -105,6 +104,12 @@ const AdminPanel = () => {
               {sortField === "surname" && (sortOrder === "asc" ? "↓" : "↑")}
             </th>
             <th
+              onClick={() => handleSort("email")}
+              style={{ cursor: "pointer" }}
+            >
+              Email {sortField === "email" && (sortOrder === "asc" ? "↓" : "↑")}
+            </th>
+            <th
               onClick={() => handleSort("role")}
               style={{ cursor: "pointer" }}
             >
@@ -128,6 +133,7 @@ const AdminPanel = () => {
               <td>
                 {user.name} {user.surname}
               </td>
+              <td>{user.email}</td>
               <td>{user.role}</td>
               <td>{user.status}</td>
               <td>
