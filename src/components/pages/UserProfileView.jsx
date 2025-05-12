@@ -148,8 +148,15 @@ const UserProfileView = () => {
         {isAdmin && (
           <button
             onClick={handleToggleBlock}
-            className="toggle-block-button"
-            style={{ marginTop: "20px" }}
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#c0392b",
+              color: "white",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
           >
             {isBlocked ? "Odblokuj konto" : "Zablokuj konto"}
           </button>

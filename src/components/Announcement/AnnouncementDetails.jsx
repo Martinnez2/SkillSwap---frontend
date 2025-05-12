@@ -88,7 +88,13 @@ const AnnouncementDetails = () => {
       </div>
 
       {author && loggedInUser?.username === author.username && (
-        <div className="announcement-button">
+        <div className="announcement-button-group">
+          <Link
+            to={`/edit-announcement/${announcement.id}`}
+            className="button-edit"
+          >
+            Edytuj ogłoszenie
+          </Link>
           <button onClick={handleDelete} className="button-delete">
             Usuń ogłoszenie
           </button>
@@ -96,7 +102,7 @@ const AnnouncementDetails = () => {
       )}
 
       {author && loggedInUser?.username !== author.username && (
-        <div className="announcement-button">
+        <div className="announcement-button-group">
           <Link to={`/userView/${author.id}`} className="button-profile">
             Zobacz profil
           </Link>

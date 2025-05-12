@@ -8,11 +8,11 @@ import RegisterPage from "./components/pages/RegisterPage";
 import AddAnnouncement from "./components/Announcement/AddAnnouncement";
 import AnnouncementList from "./components/Announcement/AnnouncementList";
 import AnnouncementDetails from "./components/Announcement/AnnouncementDetails";
-import UserPage from "./components/pages/UserPage";
 import NotFoundPage from "./components/pages/NotFoundPage";
 import AdminPanel from "./components/pages/AdminPanel";
 import UserProfileView from "./components/pages/UserProfileView";
 import UserChat from "./components/pages/UserChat";
+import EditAnnouncement from "./components/Announcement/EditAnnouncement";
 
 // import "./App.css";
 
@@ -32,11 +32,13 @@ const App = () => {
             <Route path="/announcements" element={<AnnouncementList />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/admin" element={<AdminPanel />} />
-            {/* <Route path="/user/:userId" element={<UserPage />} /> */}
-            {/* <Route path="/user" element={<UserPage />} /> */}
             <Route path="/user/:userId" element={<UserProfileView />} />
             <Route path="/userView/:userId" element={<UserProfileView />} />
             <Route path="/chat/:userId" element={<UserChat />} />
+            <Route
+              path="/edit-announcement/:id"
+              element={<EditAnnouncement />}
+            />
           </Routes>
         </div>
       </div>

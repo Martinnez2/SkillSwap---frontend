@@ -67,18 +67,19 @@
 }
 
 .form-box button {
-  padding: 10px 20px;
-  background-color: #000000;
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  font-size: 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
+  padding: 14px 24px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  transition: background 0.3s;
 }
 
 .form-box button:hover {
-  background-color: #005fd1;
+  background-color: rgb(139, 139, 139, 0.65);
+  color: white;
 }
 
 .form-intro {

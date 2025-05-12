@@ -10,6 +10,7 @@ import {
   getAnnouncements,
   deleteAnnouncement,
 } from "../../services/announcementService";
+import { toggleUserStatus } from "../../services/userUtils"; // Importowanie funkcji
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -21,14 +22,20 @@ const AdminPanel = () => {
     setUsers(getAllUsers());
   }, []);
 
-  const handleBlock = (id) => {
-    const updatedUsers = updateUserStatus(id, "blocked");
-    setUsers(updatedUsers);
-
-    const announcements = getAnnouncements();
-    announcements
-      .filter((a) => a.userId === String(id))
-      .forEach((a) => deleteAnnouncement(a.id));
+  const handleBlock = (user) => {
+    // Wywołanie toggleUserStatus, które zmienia status użytkownika i usuwa ogłoszenia, jeśli jest blokowany
+    const updatedUser = toggleUserStatus(
+      user,
+      user.status === "blocked", // Zmieniamy status na 'blocked' lub 'active'
+      updateUserStatus,
+      deleteAnnouncement,
+      getAnnouncements
+    );
+    setUsers((prevUsers) =>
+      prevUsers.map((u) =>
+        u.id === updatedUser.id ? { ...u, status: updatedUser.status } : u
+      )
+    );
   };
 
   const handleUnblock = (id) => {
@@ -128,7 +135,7 @@ const AdminPanel = () => {
               </td>
               <td>
                 {user.status === "active" ? (
-                  <button onClick={() => handleBlock(user.id)}>Zablokuj</button>
+                  <button onClick={() => handleBlock(user)}>Zablokuj</button>
                 ) : (
                   <button onClick={() => handleUnblock(user.id)}>
                     Odblokuj
