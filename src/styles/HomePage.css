@@ -83,37 +83,39 @@
 }
 
 .community-offer {
+  padding: 40px 20px;
   background-color: #ffffff;
-  border-radius: 10px;
-
-  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); */
-  margin-top: 20px;
-  width: 1000px;
-  margin-left: 10px;
-  margin-bottom: 20px;
-  max-width: 900px;
-  text-align: left;
+  text-align: center;
 }
 
 .community-offer h2 {
-  font-size: 2rem;
+  font-size: 24px;
+  margin-bottom: 30px;
   color: #333;
-  margin-bottom: 20px;
 }
 
-.community-offer ul {
-  list-style-type: none;
+.offer-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
   padding: 0;
 }
 
-.community-offer li {
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 15px;
+.offer-list li {
+  background: #e0f0ff;
+  color: #003366;
+  border-radius: 30px;
+  padding: 20px 25px;
+  width: 250px;
+  font-size: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
-.community-offer li strong {
-  color: #007bff;
+.offer-list li:hover {
+  transform: scale(1.03);
 }
 
 .action-button {
