@@ -26,12 +26,12 @@
 }
 
 .announcement-details__author-name {
-  color: black; /* Domyślny kolor czarny */
-  cursor: pointer; /* Kursor wskazujący na link */
+  color: black;
+  cursor: pointer;
 }
 
 .announcement-details__author-name:hover {
-  color: #6f42c1; /* Fioletowy kolor na hover */
+  color: #6f42c1;
 }
 
 .announcement-button {

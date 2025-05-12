@@ -1,4 +1,3 @@
-/* 🏠 Główna siatka profilu */
 .user-profile {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -13,7 +12,6 @@
   min-height: 60vh;
 }
 
-/* 📌 Lewa kolumna */
 .left-column {
   display: flex;
   flex-direction: column;
@@ -21,14 +19,12 @@
   gap: 20px;
 }
 
-/* 📢 Nagłówek */
 .left-column h1 {
   font-size: 2.4rem;
   font-weight: bold;
   color: #333;
 }
 
-/* 📝 Opis użytkownika */
 .left-column p {
   font-size: 1.2rem;
   color: #555;
@@ -36,7 +32,6 @@
   margin-bottom: 15px;
 }
 
-/* ✏️ Przycisk edycji */
 .left-column button {
   margin-top: 20px;
   margin-right: 1px;
@@ -55,7 +50,6 @@
   background-color: rgb(139, 139, 139, 0.65);
 }
 
-/* ⭐ Sekcja oceniania */
 .rating-section {
   background-color: #f9f9f9;
   padding: 20px;
@@ -71,7 +65,6 @@
   margin-bottom: 0px;
 }
 
-/* Gwiazdki */
 .stars-container {
   display: flex;
   justify-content: center;
@@ -91,7 +84,6 @@
   color: #ffcc00;
 }
 
-/* 🔘 Guzik „Napisz wiadomość” */
 .message-button {
   margin-top: 20px;
   padding: 14px 24px;
@@ -110,14 +102,12 @@
   background-color: rgba(208, 147, 5, 0.6);
 }
 
-/* 📑 Prawa kolumna */
 .right-column {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* 📌 Ogłoszenia */
 .announcements-list {
   background-color: #f9f9f9;
   padding: 20px;
@@ -127,7 +117,6 @@
   text-align: center;
 }
 
-/* Lista ogłoszeń */
 .announcements-list ul {
   list-style: none;
   padding: 0;
@@ -145,7 +134,6 @@
   color: #0056b3;
 }
 
-/* 🛑 Zablokowane konto */
 .blocked-overlay {
   margin-top: 20px;
   padding: 15px;
@@ -157,7 +145,6 @@
   text-align: center;
 }
 
-/* 🛠️ Przycisk admina */
 .toggle-block-button {
   padding: 12px 20px;
   font-size: 1rem;
@@ -173,7 +160,6 @@
   background-color: #7b0015;
 }
 
-/* 📱 Responsywność */
 @media (max-width: 768px) {
   .user-profile {
     grid-template-columns: 1fr;

@@ -198,7 +198,9 @@ const UserProfileView = () => {
               {ratingMessage && <p>{ratingMessage}</p>}
             </div>
 
-            <button className="message-button">Wyślij wiadomość</button>
+            <Link to={`/chat/${user.id}`}>
+              <button className="message-button">Wyślij wiadomość</button>
+            </Link>
           </>
         )}
 

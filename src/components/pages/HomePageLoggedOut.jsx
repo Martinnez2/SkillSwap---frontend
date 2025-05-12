@@ -44,18 +44,33 @@ const HomePageLoggedOut = () => {
 
       <section className="community-offer">
         <h2>Co oferuje nasza społeczność?</h2>
-        <ul>
+        <ul className="offer-list">
           <li>
-            <strong>Wymiana umiejętności:</strong> Ucz się i ucz innych!
+            <strong>Wymiana umiejętności</strong>
           </li>
           <li>
-            <strong>Ogłoszenia:</strong> Dodawaj ogłoszenia.
+            <strong>Ogłoszenia</strong>
           </li>
           <li>
-            <strong>Opinie i oceny:</strong> Wymieniaj się opiniami.
+            <strong>Opinie i oceny</strong>
           </li>
           <li>
-            <strong>Networking:</strong> Buduj swoją sieć kontaktów.
+            <strong>Networking</strong>
+          </li>
+          <li>
+            <strong>Inspiracje</strong>
+          </li>
+          <li>
+            <strong>Dyskusje tematyczne</strong>
+          </li>
+          <li>
+            <strong>Wzajemna pomoc</strong>
+          </li>
+          <li>
+            <strong>Rozwój osobisty</strong>
+          </li>
+          <li>
+            <strong>Mentoring</strong>
           </li>
         </ul>
       </section>

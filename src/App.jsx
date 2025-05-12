@@ -12,6 +12,7 @@ import UserPage from "./components/pages/UserPage";
 import NotFoundPage from "./components/pages/NotFoundPage";
 import AdminPanel from "./components/pages/AdminPanel";
 import UserProfileView from "./components/pages/UserProfileView";
+import UserChat from "./components/pages/UserChat";
 
 // import "./App.css";
 
@@ -35,6 +36,7 @@ const App = () => {
             {/* <Route path="/user" element={<UserPage />} /> */}
             <Route path="/user/:userId" element={<UserProfileView />} />
             <Route path="/userView/:userId" element={<UserProfileView />} />
+            <Route path="/chat/:userId" element={<UserChat />} />
           </Routes>
         </div>
       </div>
