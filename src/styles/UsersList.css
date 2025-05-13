@@ -22,10 +22,7 @@
   justify-content: space-between;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   opacity: 0.8;
-<<<<<<< HEAD
   word-wrap: break-word;
-=======
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
 }
 
 .userList-card h3 {
@@ -33,20 +30,6 @@
   margin-bottom: 5px;
 }
 
-<<<<<<< HEAD
-=======
-.userList-card p.description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Ograniczenie do 3 linii */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 10px;
-  line-clamp: 3;
-  box-orient: vertical;
-}
-
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
 .details-button-wrapper {
   display: flex;
   justify-content: center;
@@ -86,19 +69,9 @@ p {
 
 .userList-description {
   display: -webkit-box;
-<<<<<<< HEAD
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 4.6em;
 }
-=======
-  -webkit-line-clamp: 2; /* zmień na 3 jeśli chcesz */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 3.6em; /* ok. 2 linijki dla font-size 16px */
-}
-
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8

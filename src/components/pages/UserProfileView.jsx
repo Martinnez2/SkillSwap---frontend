@@ -120,15 +120,7 @@ const UserProfileView = () => {
         <h1>
           {user.name} {user.surname}
         </h1>
-<<<<<<< HEAD
         {isAdmin && <p>{user.email}</p>}
-=======
-        {isAdmin &&(
-          <p>
-            {user.email}
-          </p>
-        )}
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
 
         <div>
           <p className="average-rating">

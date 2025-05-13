@@ -26,11 +26,7 @@ const AnnouncementDetails = () => {
   }, [id]);
 
   const isAdmin = loggedInUser?.role === "ADMIN";
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
   const handleDelete = () => {
     if (!loggedInUser) {
       console.error("No logged in user found.");
@@ -42,11 +38,7 @@ const AnnouncementDetails = () => {
     );
 
     if (confirmation) {
-<<<<<<< HEAD
       if (loggedInUser.id === announcement.userId || isAdmin) {
-=======
-      if ((loggedInUser.id === announcement.userId) || isAdmin) {
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
         const updatedAnnouncements = deleteAnnouncement(announcement.id);
 
         if (updatedAnnouncements) {
@@ -112,7 +104,6 @@ const AnnouncementDetails = () => {
               </button>
             </>
           )}
-<<<<<<< HEAD
 
           {loggedInUser?.username !== author.username && (
             <Link to={`/userView/${author.id}`} className="button-profile">
@@ -127,25 +118,6 @@ const AnnouncementDetails = () => {
           )}
         </div>
       )}
-=======
-
-          {loggedInUser?.username !== author.username && (
-            <Link to={`/userView/${author.id}`} className="button-profile">
-              Zobacz profil
-            </Link>
-          )}
-
-          {isAdmin && loggedInUser?.username !== author.username && (
-            <button onClick={handleDelete} className="button-delete">
-              Usuń ogłoszenie
-            </button>
-          )}
-
-          
-        </div>
-      )}
-
->>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
     </div>
   );
 };
