@@ -120,11 +120,15 @@ const UserProfileView = () => {
         <h1>
           {user.name} {user.surname}
         </h1>
+<<<<<<< HEAD
+        {isAdmin && <p>{user.email}</p>}
+=======
         {isAdmin &&(
           <p>
             {user.email}
           </p>
         )}
+>>>>>>> 3aaee0c9cecf0f947391202eef125e9152f0ecd8
 
         <div>
           <p className="average-rating">
@@ -143,7 +147,7 @@ const UserProfileView = () => {
           />
         ) : (
           <>
-            <p>{user.description}</p>
+            <p className="user-description">{user.description}</p>
             {isOwnProfile && !isBlocked && (
               <button onClick={() => setIsEditing(true)}>Edytuj opis</button>
             )}
@@ -180,7 +184,7 @@ const UserProfileView = () => {
           {userAnnouncements.length > 0 ? (
             <ul>
               {userAnnouncements.map((announcement) => (
-                <li key={announcement.id}>
+                <li key={announcement.id} className="announcement-item">
                   <Link to={`/announcement/${announcement.id}`}>
                     {announcement.title}
                   </Link>

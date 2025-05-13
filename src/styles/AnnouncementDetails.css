@@ -9,10 +9,17 @@
 .announcement-details__title {
   font-size: 2em;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  text-align: left;
 }
 
 .announcement-details__description {
-  margin-bottom: 15px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .announcement-details__author,
@@ -86,4 +93,11 @@
 .button-profile:hover {
   background-color: rgb(139, 139, 139, 0.65);
   color: black;
+}
+
+@media (max-width: 960px) {
+  .announcement-details {
+    width: 90%;
+    padding: 10px;
+  }
 }

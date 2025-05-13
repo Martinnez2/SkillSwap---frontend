@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
-import { getAllAnnouncements, getUserById } from "../../services/announcementService";
+import {
+  getAllAnnouncements,
+  getUserById,
+} from "../../services/announcementService";
 import "../../styles/AnnouncementList.css";
 
 const AnnouncementList = () => {
