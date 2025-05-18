@@ -56,7 +56,7 @@ const AnnouncementList = () => {
             <div key={ann.id} className="announcement-card">
               <h3>{ann.title}</h3>
               <p className="description">{ann.description}</p>
-              <p>
+              <p className="person">
                 <strong>Dodane przez:</strong> {ann.userName} {ann.userSurname}
               </p>
               <p>

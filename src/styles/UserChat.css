@@ -2,7 +2,6 @@
   width: 100%;
   max-width: 900px;
   margin: 50px auto;
-  padding: 20px;
   border-radius: 8px;
   background-color: #f1f1f1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -62,6 +61,7 @@ h2 {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  margin: 15px;
 }
 
 .chat-input input {

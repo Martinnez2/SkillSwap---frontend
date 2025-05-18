@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchUsersBar";
 import { getAllUsers } from "../../services/userService";
-import "../../styles/UsersList.css"; 
+import "../../styles/UsersList.css";
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
@@ -16,7 +16,6 @@ const UsersList = () => {
     setUsers(filtered);
     setAllUsers(filtered);
   }, []);
-
 
   const isAdmin = loggedInUser?.role === "ADMIN";
 
@@ -34,10 +33,11 @@ const UsersList = () => {
     navigate(`/userView/${id}`);
   };
 
-
   return (
     <div style={{ maxWidth: "1000px", margin: "10px auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center", color: "black" }}>Lista użytkowników</h2>
+      <h2 style={{ textAlign: "center", color: "black" }}>
+        Lista użytkowników
+      </h2>
       <SearchBar onSearch={handleSearch} />
 
       {users.length === 0 ? (
@@ -46,21 +46,19 @@ const UsersList = () => {
         <div className="userList-container">
           {users.map((user) => (
             <div key={user.id} className="userList-card">
-              <h3>
+              <h3 className="user-name">
                 {user.name} {user.surname}
               </h3>
               {isAdmin && (
                 <p>
                   <strong>Email:</strong> {user.email}
-                </p>    
+                </p>
               )}
               <p>
-                 <strong>Status:</strong> {user.status || "brak"}
-              </p>    
+                <strong>Status:</strong> {user.status || "brak"}
+              </p>
               {user.description && (
-                <p className="userList-description">
-                  {user.description}
-                </p>
+                <p className="userList-description">{user.description}</p>
               )}
               <div className="details-button-wrapper">
                 <button

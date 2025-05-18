@@ -75,3 +75,13 @@ p {
   text-overflow: ellipsis;
   max-height: 4.6em;
 }
+
+.user-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: 4.5em;
+}

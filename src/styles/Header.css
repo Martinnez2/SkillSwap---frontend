@@ -1,18 +1,33 @@
 .header {
   background-color: #f4c806;
-  color: white;
+  color: black;
   padding: 10px 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 1000px;
+  flex-direction: column;
   box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  max-width: 1000px;
+  z-index: 1000;
+  top: 0;
+  left: 0;
   right: 0;
   margin: 0 auto;
-  z-index: 1000;
+}
+
+.mobile-bar {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.desktop-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .header-left,
@@ -22,21 +37,11 @@
   gap: 20px;
 }
 
-.header-left {
-  flex: 1;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
 .nav-link {
   font-weight: bold;
-  color: rgb(0, 0, 0);
+  color: black;
   text-decoration: none;
-  transition: color 0.3s ease-in-out;
+  transition: 0.3s;
   padding: 5px 10px;
   border-radius: 5px;
 }
@@ -49,46 +54,49 @@
 .logout-button {
   background-color: rgba(208, 147, 5, 0.737);
   color: black;
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid black;
   font-weight: bold;
   padding: 5px 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
   border-radius: 5px;
+  transition: 0.3s;
 }
 
 .logout-button:hover {
   background-color: #555;
+  color: white;
 }
 
-.welcome-text {
-  margin-right: 10px;
+.hamburger {
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: black;
 }
 
 @media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
+  .desktop-nav {
+    display: none;
   }
 
-  .header-left,
-  .header-right {
+  .mobile-bar {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    background-color: #f4c806;
+    padding: 10px 0;
     gap: 10px;
+    align-items: center;
   }
 
-  .header-left {
-    width: 100%;
-  }
-
-  .nav-link {
-    padding: 5px 10px;
-    font-size: 14px;
-  }
-
-  .logout-button {
-    font-size: 14px;
+  .mobile-menu .nav-link,
+  .mobile-menu .logout-button {
+    width: auto;
+    text-align: center;
+    padding: 10px 20px;
   }
 }

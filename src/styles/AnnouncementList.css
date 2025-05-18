@@ -49,6 +49,17 @@
   box-orient: vertical;
 }
 
+.announcement-card p.person {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+  line-clamp: 3;
+  box-orient: vertical;
+}
+
 .details-button-wrapper {
   display: flex;
   justify-content: center;

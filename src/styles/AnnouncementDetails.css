@@ -32,9 +32,23 @@
   color: #007bff;
 }
 
+.announcement-details__author {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .announcement-details__author-name {
   color: black;
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .announcement-details__author-name:hover {
