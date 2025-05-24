@@ -34,7 +34,7 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/user/:userId" element={<UserProfileView />} />
-            <Route path="/userView/:userId" element={<UserProfileView />} />
+            <Route path="/profile/:userId" element={<UserProfileView />} />
             <Route path="/chat/:userId" element={<UserChat />} />
             <Route
               path="/edit-announcement/:id"

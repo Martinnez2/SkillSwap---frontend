@@ -57,7 +57,7 @@ const Header = () => {
           {user ? (
             <>
               {user.role !== "ADMIN" && (
-                <Link to={`/user/${user.id}`} className="nav-link">
+                <Link to={"/profile/me"} className="nav-link">
                   Mój profil
                 </Link>
               )}

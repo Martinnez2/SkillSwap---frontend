@@ -34,8 +34,19 @@ const UserProfileView = () => {
   const [ratingCount, setRatingCount] = useState(0);
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
   useEffect(() => {
+    if (userId === "me") {
+      if (loggedInUser) {
+        setUser(loggedInUser);
+        setUserAnnouncements(
+          getUserAnnouncements(loggedInUser.id, getAnnouncements)
+        );
+      } else {
+        navigate("/login");
+      }
+      return;
+    }
+
     const u = getUserById(Number(userId));
     if (!u) {
       console.error(`User with ID ${userId} not found.`);
