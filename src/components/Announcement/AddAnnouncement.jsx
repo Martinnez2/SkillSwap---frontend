@@ -4,17 +4,18 @@ import { createAnnouncement } from "../../services/announcementService";
 import "../../styles/AddAnnouncement.css";
 
 const AddAnnouncement = () => {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")) || {};
+  const isBlocked = loggedInUser?.status?.toUpperCase() === "BANNED";
+
+
   const [formData, setFormData] = useState({
     skillId: "",
     title: "",
     description: "",
-    visibility: "PUBLIC",
+    visibility: "WORLD",
   });
 
   const navigate = useNavigate();
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-
-  const isBlocked = loggedInUser?.status === "blocked";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,11 +25,13 @@ const AddAnnouncement = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!loggedInUser) {
-      alert("Musisz być zalogowany, aby dodać ogłoszenie.");
+    if (!loggedInUser?.name || !loggedInUser?.surname) {
+      alert(
+        "Musisz uzupełnić imię i nazwisko w profilu, aby dodać ogłoszenie."
+      );
       return;
     }
 
@@ -37,15 +40,28 @@ const AddAnnouncement = () => {
       return;
     }
 
+    if (!formData.title || !formData.description) {
+      alert("Tytuł i opis są wymagane.");
+      return;
+    }
+
     const newAnnouncement = {
-      ...formData,
-      id: Date.now(),
-      createdAt: new Date().toISOString(),
       userId: loggedInUser.id,
+      skillId: formData.skillId ? Number(formData.skillId) : null,
+      title: formData.title,
+      description: formData.description,
+      visibility: formData.visibility.toUpperCase(),
     };
 
-    createAnnouncement(newAnnouncement);
-    navigate("/announcements");
+    console.log("Tworzę ogłoszenie:", newAnnouncement);
+
+    try {
+      await createAnnouncement(newAnnouncement);
+      navigate("/");
+    } catch (error) {
+      console.error("Błąd podczas tworzenia ogłoszenia:", error);
+      alert("Nie udało się dodać ogłoszenia. Spróbuj ponownie.");
+    }
   };
 
   return (
@@ -91,6 +107,18 @@ const AddAnnouncement = () => {
                   <option value="3">Muzyka</option>
                   <option value="4">Programowanie</option>
                   <option value="5">Sztuka</option>
+                </select>
+
+                <label>Widoczność ogłoszenia:</label>
+                <select
+                  name="visibility"
+                  value={formData.visibility}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="WORLD">Dla wszystkich</option>
+                  <option value="COUNTRY">Dla kraju</option>
+                  <option value="CITY">Dla miasta</option>
                 </select>
               </div>
 

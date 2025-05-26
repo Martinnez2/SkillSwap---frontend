@@ -3,23 +3,23 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import "../../styles/UserProfileView.css";
 import {
   getUserById,
-  updateUser,
   updateUserStatus,
   deleteUserAccount,
 } from "../../services/userService";
 import {
   getAnnouncements,
   deleteAnnouncement,
+  getAnnouncementsByUserId,
 } from "../../services/announcementService";
 import UserDetails from "../User/UserDetails";
 
 import {
-  getUserAnnouncements,
   toggleUserStatus,
   updateUserDescription,
   saveRatingToLocal,
   getUserRatingFromLocal,
   getAverageRating,
+  getCurrentUser,
 } from "../../services/userUtils";
 
 const UserProfileView = () => {
@@ -34,27 +34,39 @@ const UserProfileView = () => {
   const [ratingCount, setRatingCount] = useState(0);
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  useEffect(() => {
-    if (userId === "me") {
-      if (loggedInUser) {
-        setUser(loggedInUser);
-        setUserAnnouncements(
-          getUserAnnouncements(loggedInUser.id, getAnnouncements)
-        );
-      } else {
-        navigate("/login");
-      }
-      return;
-    }
 
-    const u = getUserById(Number(userId));
-    if (!u) {
-      console.error(`User with ID ${userId} not found.`);
-      setUser(null);
-    } else {
-      setUser(u);
-      setUserAnnouncements(getUserAnnouncements(u.id, getAnnouncements));
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let userToLoad;
+
+        if (userId === "me") {
+          userToLoad = await getCurrentUser(); 
+        } else {
+          userToLoad = getUserById(Number(userId));
+          if (!userToLoad) {
+            console.error(`Nie znaleziono użytkownika o ID ${userId}`);
+            setUser(null);
+            return;
+          }
+        }
+
+        setUser(userToLoad);
+
+        const actualUserId = userToLoad.userId || userToLoad.id;
+        if (!actualUserId) {
+          console.error("Brak userId do pobrania ogłoszeń");
+          return;
+        }
+
+        const announcements = await getAnnouncementsByUserId(actualUserId);
+        setUserAnnouncements(announcements);
+      } catch (err) {
+        console.error("Błąd podczas ładowania profilu:", err);
+      }
+    };
+
+    fetchData();
   }, [userId]);
 
   useEffect(() => {
@@ -79,30 +91,57 @@ const UserProfileView = () => {
     return <p>Użytkownik nie został znaleziony.</p>;
   }
 
-  const isBlocked = user.status === "blocked";
+  const effectiveStatus = user.status || loggedInUser?.status;
+  const isBlocked = effectiveStatus?.toUpperCase() === "BANNED";
+
+
   const isOwnProfile = loggedInUser?.id === user.id;
   const isAdmin = loggedInUser?.role === "ADMIN";
 
-  const handleToggleBlock = () => {
-    const updated = toggleUserStatus(
-      user,
-      isBlocked,
-      updateUserStatus,
-      deleteAnnouncement,
-      getAnnouncements
-    );
-    setUser(updated);
+  const handleToggleBlock = async () => {
+    try {
+      const updatedUser = await toggleUserStatus(
+        user,
+        isBlocked,
+        updateUserStatus,
+        deleteAnnouncement,
+        getAnnouncements
+      );
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Błąd przy zmianie statusu:", error);
+    }
   };
 
-  const handleDescriptionSave = (newDescription) => {
-    const updated = updateUserDescription(
-      user,
-      newDescription,
-      updateUser,
-      isOwnProfile
-    );
-    setUser(updated);
-    setIsEditing(false);
+
+  const handleDescriptionSave = async ({
+    firstName,
+    lastName,
+    description,
+  }) => {
+    try {
+      const updated = await updateUserDescription(user.id, {
+        name: firstName,
+        surname: lastName,
+        description,
+      });
+
+
+      const updatedUser = {
+        ...user,
+        name: updated.name,
+        surname: updated.surname,
+        description: updated.description,
+      };
+
+      setUser(updatedUser);
+      localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Błąd aktualizacji danych użytkownika:", error);
+      alert("Nie udało się zaktualizować danych.");
+    }
   };
 
   const handleRatingClick = (value) => {
@@ -144,6 +183,8 @@ const UserProfileView = () => {
 
         {isOwnProfile && isEditing ? (
           <UserDetails
+            firstName={user.name}
+            lastName={user.surname}
             description={user.description}
             onSave={handleDescriptionSave}
             onCancel={() => setIsEditing(false)}
@@ -152,7 +193,7 @@ const UserProfileView = () => {
           <>
             <p className="user-description">{user.description}</p>
             {isOwnProfile && !isBlocked && (
-              <button onClick={() => setIsEditing(true)}>Edytuj opis</button>
+              <button onClick={() => setIsEditing(true)}>Edytuj profil</button>
             )}
           </>
         )}

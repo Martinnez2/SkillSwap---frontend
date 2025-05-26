@@ -11,10 +11,17 @@ const UsersList = () => {
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
-    const data = getAllUsers();
-    const filtered = data.filter((user) => user?.role !== "ADMIN");
-    setUsers(filtered);
-    setAllUsers(filtered);
+    async function fetchUsers() {
+      try {
+        const data = await getAllUsers();
+        const filtered = data.filter((user) => user?.role !== "ADMIN");
+        setUsers(filtered);
+        setAllUsers(filtered);
+      } catch (err) {
+        console.error("Błąd pobierania użytkowników: ", err);
+      }
+    }
+    fetchUsers();
   }, []);
 
   const isAdmin = loggedInUser?.role === "ADMIN";
@@ -35,9 +42,7 @@ const UsersList = () => {
 
   return (
     <div style={{ maxWidth: "1000px", margin: "10px auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center", color: "black" }}>
-        Lista użytkowników
-      </h2>
+      <h2 style={{ textAlign: "center", color: "black" }}>Lista użytkowników</h2>
       <SearchBar onSearch={handleSearch} />
 
       {users.length === 0 ? (

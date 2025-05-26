@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
-import {
-  getAllAnnouncements,
-  getUserById,
-} from "../../services/announcementService";
+import { getAllAnnouncementsWithUsers } from "../../services/announcementService";
 import "../../styles/AnnouncementList.css";
 
 const AnnouncementList = () => {
@@ -12,21 +9,18 @@ const AnnouncementList = () => {
   const [allAnnouncements, setAllAnnouncements] = useState([]);
   const navigate = useNavigate();
 
-  const loadAnnouncements = () => {
-    const data = getAllAnnouncements().map((ann) => {
-      const user = getUserById(Number(ann.userId));
-      return {
-        ...ann,
-        userName: user?.name || "Nieznany",
-        userSurname: user?.surname || "Użytkownik",
-      };
-    });
-    setAnnouncements(data);
-    setAllAnnouncements(data);
-  };
-
   useEffect(() => {
-    loadAnnouncements();
+    const fetchAnnouncements = async () => {
+      try {
+        const data = await getAllAnnouncementsWithUsers();
+        setAnnouncements(data);
+        setAllAnnouncements(data);
+      } catch (error) {
+        console.error("Błąd ładowania ogłoszeń:", error);
+      }
+    };
+
+    fetchAnnouncements();
   }, []);
 
   const handleSearch = (query) => {
@@ -52,8 +46,8 @@ const AnnouncementList = () => {
         <p style={{ color: "black" }}>Brak ogłoszeń do wyświetlenia.</p>
       ) : (
         <div className="announcement-container">
-          {announcements.map((ann) => (
-            <div key={ann.id} className="announcement-card">
+          {announcements.map((ann, index) => (
+            <div key={`${ann.id}-${index}`} className="announcement-card">
               <h3>{ann.title}</h3>
               <p className="description">{ann.description}</p>
               <p className="person">

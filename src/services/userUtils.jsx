@@ -1,3 +1,5 @@
+import axios from "axios";
+
 // Zwraca ogłoszenia powiązane z danym użytkownikiem
 export const getUserAnnouncements = (userId, getAnnouncements) => {
   return getAnnouncements().filter((a) => Number(a.userId) === Number(userId));
@@ -28,24 +30,40 @@ export const toggleUserStatus = (
   return updatedUser;
 };
 
-// Aktualizuje opis użytkownika i lokalnie zapisuje dane, jeśli to własny profil
-export const updateUserDescription = (
-  user,
-  newDescription,
-  updateUser,
-  isOwnProfile
-) => {
-  if (!user) return null;
+export const getCurrentUser = async () => {
+  const response = await fetch("/api/v1/user-details/me", {
+    credentials: "include", // jeśli używasz cookie
+  });
 
-  const updated = { ...user, description: newDescription };
-  updateUser(updated);
-
-  if (isOwnProfile) {
-    localStorage.setItem("loggedInUser", JSON.stringify(updated));
+  if (!response.ok) {
+    throw new Error("Nie udało się pobrać danych użytkownika");
   }
 
-  return updated;
+  return await response.json();
 };
+
+// Aktualizuje opis użytkownika i lokalnie zapisuje dane, jeśli to własny profil
+export async function updateUserDescription(
+  userId,
+  { name, surname, description }
+) {
+  try {
+    const response = await axios.post(
+      "http://localhost:8081/api/v1/user-details",
+      {
+        userId,
+        name,
+        surname,
+        description,
+      },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Błąd podczas aktualizacji danych:", error);
+    throw error;
+  }
+}
 
 // Ustawia ocenę i wyświetla wiadomość
 export const handleUserRating = (value, setRating, setRatingMessage) => {

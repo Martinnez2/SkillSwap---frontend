@@ -1,4 +1,4 @@
-import { getAnnouncements, saveAnnouncements } from "./announcementService";
+import { getAnnouncements, deleteAnnouncement } from "./announcementService";
 import mockUsers from "../mock_data/mockUsers";
 
 const LOCAL_STORAGE_KEY = "users";
@@ -12,36 +12,85 @@ function saveUsers(users) {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users));
 }
 
-export function getAllUsers() {
-  return getUsers();
+export async function getAllUsers() {
+  try {
+    const response = await fetch("http://localhost:8081/api/v1/users", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`Błąd komunikacji z serwerem: ${response.statusText}`);
+    }
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkowników:", error);
+    throw error;
+  }
 }
 
-export function updateUserStatus(id, status) {
-  const users = getUsers();
-  const updated = users.map((user) =>
-    user.id === id ? { ...user, status } : user
-  );
-  saveUsers(updated);
-  return updated;
+export async function updateUserStatus(id, status) {
+  try {
+    const response = await fetch(`http://localhost:8081/api/v1/users/${id}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    });
+    if (!response.ok) {
+      throw new Error("Nie udało się zaktualizować statusu użytkownika");
+    }
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Błąd podczas zmiany statusu użytkownika:", error);
+    throw error;
+  }
 }
 
-// export function deleteUser(id) {
-//   const users = getUsers();
-//   const updated = users.filter((user) => user.id !== id);
-//   saveUsers(updated);
-//   return updated;
-// }
+export async function deleteUserAccount(userId) {
+  try {
+    const announcements = await getAnnouncements();
+    const userAnnouncements = announcements.filter(
+      (a) => Number(a.userId) === Number(userId)
+    );
+    for (const ann of userAnnouncements) {
+      await deleteAnnouncement(ann.id);
+    }
 
-export function deleteUserAccount(userId) {
-  const users = getUsers();
-  const updatedUsers = users.filter((user) => user.id !== userId);
-  saveUsers(updatedUsers);
-  const announcements = getAnnouncements();
-  const updatedAnnouncements = announcements.filter(
-    (announcement) => announcement.userId !== userId
-  );
-  saveAnnouncements(updatedAnnouncements);
+    const response = await fetch(`http://localhost:8081/api/v1/users/${userId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Nie udało się usunąć użytkownika");
+    }
+    return true;
+  } catch (error) {
+    console.error("Błąd przy usuwaniu użytkownika:", error);
+    throw error;
+  }
 }
+
+
+
+export async function toggleUserStatus(user, isBlocked) {
+  const newStatus = isBlocked ? "ACTIVE" : "BANNED";
+  const updatedUser = await updateUserStatus(user.id, newStatus);
+  if (newStatus === "BANNED") {
+    const announcements = await getAnnouncements();
+    const userAnnouncements = announcements.filter(
+      (a) => Number(a.userId) === Number(user.id)
+    );
+    for (const ann of userAnnouncements) {
+      await deleteAnnouncement(ann.id);
+    }
+  }
+  
+  return updatedUser;
+}
+
 
 export function getUserById(id) {
   const users = getUsers();

@@ -1,25 +1,59 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  getAnnouncementById,
-  updateAnnouncement,
-} from "../../services/announcementService";
+import { getAnnouncementById, updateAnnouncement } from "../../services/announcementService";
 import "../../styles/AddAnnouncement.css";
 
 const EditAnnouncement = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Pobieramy loggedInUser tylko raz przy renderze
+  const loggedInUser = React.useMemo(() => {
+    try {
+      return JSON.parse(localStorage.getItem("loggedInUser"));
+    } catch {
+      return null;
+    }
+  }, []);
 
   useEffect(() => {
-    const announcement = getAnnouncementById(Number(id));
-    if (announcement) {
-      setFormData(announcement);
-    } else {
-      alert("Ogłoszenie nie znalezione");
-      navigate("/");
-    }
-  }, [id, navigate]);
+    const fetchAnnouncement = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const announcement = await getAnnouncementById(Number(id));
+        if (!announcement) {
+          alert("Ogłoszenie nie znalezione.");
+          return navigate("/");
+        }
+
+        // Pobieramy identyfikator zalogowanego użytkownika (może być zapisany jako "id" lub "userId")
+        const loggedInUserId = loggedInUser?.id || loggedInUser?.userId;
+
+        // Sprawdzenie uprawnień – porównujemy właściwy identyfikator z announcement.userId
+        if (loggedInUserId !== announcement.userId && loggedInUser?.role !== "ADMIN") {
+          alert("Nie masz uprawnień do edycji tego ogłoszenia.");
+          return navigate("/");
+        }
+
+        setFormData({
+          ...announcement,
+          visibility: announcement.visibility || "WORLD",
+        });
+      } catch (err) {
+        console.error("Błąd podczas pobierania ogłoszenia:", err);
+        setError("Wystąpił błąd podczas ładowania ogłoszenia.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnnouncement();
+  }, [id, navigate, loggedInUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,13 +63,25 @@ const EditAnnouncement = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateAnnouncement(formData);
-    navigate(`/announcement/${formData.id}`);
+
+    try {
+      const updated = await updateAnnouncement(formData);
+      if (!updated) {
+        alert("Nie udało się zapisać zmian.");
+        return;
+      }
+      navigate(`/announcement/${formData.id}`);
+    } catch (err) {
+      console.error("Błąd przy aktualizacji ogłoszenia:", err);
+      alert("Nie udało się zapisać zmian.");
+    }
   };
 
-  if (!formData) return <p>Ładowanie...</p>;
+  if (loading) return <p>Ładowanie ogłoszenia...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (!formData) return null;
 
   return (
     <div className="add-announcement-container">
@@ -53,6 +99,33 @@ const EditAnnouncement = () => {
                 onChange={handleChange}
                 required
               />
+
+              <label>Kategoria umiejętności:</label>
+              <select
+                name="skillId"
+                value={formData.skillId}
+                onChange={handleChange}
+                required
+              >
+                <option value="">-- Wybierz kategorię --</option>
+                <option value="1">Sport</option>
+                <option value="2">Języki</option>
+                <option value="3">Muzyka</option>
+                <option value="4">Programowanie</option>
+                <option value="5">Sztuka</option>
+              </select>
+
+              <label>Widoczność ogłoszenia:</label>
+              <select
+                name="visibility"
+                value={formData.visibility}
+                onChange={handleChange}
+                required
+              >
+                <option value="WORLD">Dla wszystkich</option>
+                <option value="COUNTRY">Dla kraju</option>
+                <option value="CITY">Dla miasta</option>
+              </select>
             </div>
 
             <div className="form-right">
