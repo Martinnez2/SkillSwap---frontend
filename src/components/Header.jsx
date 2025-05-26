@@ -2,15 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import logo from "../images/logo_skill.png";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await axios.post("/api/v1/auth/logout", {}, { withCredentials: true });
+      localStorage.removeItem("loggedInUser");
+      navigate("/login");
+    } catch (error) {
+      console.error("Błąd podczas wylogowania:", error);
+      // Możesz pokazać użytkownikowi alert lub info
+    }
   };
 
   const toggleMenu = () => {
@@ -57,7 +64,7 @@ const Header = () => {
           {user ? (
             <>
               {user.role !== "ADMIN" && (
-                <Link to={`/user/${user.id}`} className="nav-link">
+                <Link to={"/profile/me"} className="nav-link">
                   Mój profil
                 </Link>
               )}

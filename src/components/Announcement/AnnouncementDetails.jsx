@@ -14,41 +14,44 @@ const AnnouncementDetails = () => {
   const navigate = useNavigate();
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
   useEffect(() => {
-    const foundAnnouncement = getAnnouncementById(parseInt(id));
+    const fetchAnnouncement = async () => {
+      try {
+        const announcementData = await getAnnouncementById(parseInt(id));
+        setAnnouncement(announcementData);
 
-    if (foundAnnouncement) {
-      setAnnouncement(foundAnnouncement);
+        if (announcementData?.userId) {
+          const userData = await getUserById(Number(announcementData.userId));
+          setAuthor(userData);
+        }
+      } catch (error) {
+        console.error("Błąd podczas pobierania ogłoszenia:", error);
+      }
+    };
 
-      const foundUser = getUserById(Number(foundAnnouncement.userId));
-      setAuthor(foundUser);
-    }
+    fetchAnnouncement();
   }, [id]);
 
   const isAdmin = loggedInUser?.role === "ADMIN";
+  const isAuthor = loggedInUser?.userId === announcement?.userId;
 
-  const handleDelete = () => {
-    if (!loggedInUser) {
-      console.error("No logged in user found.");
-      return;
-    }
-
+  const handleDelete = async () => {
     const confirmation = window.confirm(
       "Czy na pewno chcesz usunąć to ogłoszenie?"
     );
+    if (!confirmation) return;
 
-    if (confirmation) {
-      if (loggedInUser.id === announcement.userId || isAdmin) {
-        const updatedAnnouncements = deleteAnnouncement(announcement.id);
-
-        if (updatedAnnouncements) {
-          navigate("/");
-        }
-      } else {
-        alert(
-          "Nie możesz usunąć tego ogłoszenia, ponieważ nie jesteś jego autorem."
-        );
+    if (isAuthor || isAdmin) {
+      try {
+        await deleteAnnouncement(announcement.id);
+        navigate("/profile/me");
+      } catch (error) {
+        console.error("Błąd podczas usuwania ogłoszenia:", error);
+        alert("Nie udało się usunąć ogłoszenia.");
       }
+    } else {
+      alert("Nie masz uprawnień do usunięcia tego ogłoszenia.");
     }
   };
 
@@ -68,7 +71,7 @@ const AnnouncementDetails = () => {
               to={`/userView/${author.id}`}
               className="announcement-details__author-name"
             >
-              {author.name} {author.surname}
+              {author.name || "Nieznane imię"} {author.surname || ""}
             </Link>
           ) : (
             "Nieznany użytkownik"
@@ -78,7 +81,6 @@ const AnnouncementDetails = () => {
           <strong>Data:</strong>{" "}
           {new Date(announcement.createdAt).toLocaleString()}
         </p>
-        <br />
       </div>
 
       <hr />
@@ -89,35 +91,33 @@ const AnnouncementDetails = () => {
         <p>{announcement.description}</p>
       </div>
 
-      {author && (
-        <div className="announcement-button-group">
-          {loggedInUser?.username === author.username && (
-            <>
-              <Link
-                to={`/edit-announcement/${announcement.id}`}
-                className="button-edit"
-              >
-                Edytuj ogłoszenie
-              </Link>
-              <button onClick={handleDelete} className="button-delete">
-                Usuń ogłoszenie
-              </button>
-            </>
-          )}
-
-          {loggedInUser?.username !== author.username && (
-            <Link to={`/userView/${author.id}`} className="button-profile">
-              Zobacz profil
+      <div className="announcement-button-group">
+        {isAuthor && (
+          <>
+            <Link
+              to={`/edit-announcement/${announcement.id}`}
+              className="button-edit"
+            >
+              Edytuj ogłoszenie
             </Link>
-          )}
-
-          {isAdmin && loggedInUser?.username !== author.username && (
             <button onClick={handleDelete} className="button-delete">
               Usuń ogłoszenie
             </button>
-          )}
-        </div>
-      )}
+          </>
+        )}
+
+        {!isAuthor && author && (
+          <Link to={`/userView/${author.id}`} className="button-profile">
+            Zobacz profil
+          </Link>
+        )}
+
+        {isAdmin && !isAuthor && (
+          <button onClick={handleDelete} className="button-delete">
+            Usuń ogłoszenie jako administrator
+          </button>
+        )}
+      </div>
     </div>
   );
 };
