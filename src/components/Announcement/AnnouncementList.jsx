@@ -13,6 +13,12 @@ const AnnouncementList = () => {
     const fetchAnnouncements = async () => {
       try {
         const data = await getAllAnnouncementsWithUsers();
+        // console.log("Odebrane ogłoszenia:", data);
+        // // Sprawdzenie duplikatów ID
+        // const ids = data.map((ann) => ann.id);
+        // const duplicates = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+        // console.log("Duplikaty ID:", duplicates);
+
         setAnnouncements(data);
         setAllAnnouncements(data);
       } catch (error) {
@@ -46,8 +52,8 @@ const AnnouncementList = () => {
         <p style={{ color: "black" }}>Brak ogłoszeń do wyświetlenia.</p>
       ) : (
         <div className="announcement-container">
-          {announcements.map((ann, index) => (
-            <div key={`${ann.id}-${index}`} className="announcement-card">
+          {announcements.map((ann) => (
+            <div key={ann.id} className="announcement-card">
               <h3>{ann.title}</h3>
               <p className="description">{ann.description}</p>
               <p className="person">

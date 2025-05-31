@@ -10,8 +10,8 @@ const RegisterPage = () => {
     username: "",
     password: "",
     email: "",
-    role: "USER", // domyślnie "USER"
-    status: "ACTIVE", // wymagane przez backend
+    role: "USER",
+    status: "ACTIVE",
   });
 
   const [errorMessage, setErrorMessage] = useState("");

@@ -14,7 +14,9 @@ const UsersList = () => {
     async function fetchUsers() {
       try {
         const data = await getAllUsers();
-        const filtered = data.filter((user) => user?.role !== "ADMIN");
+        const filtered = data.filter(
+          (user) => user?.role !== "ADMIN" && (user.name || user.surname)
+        );
         setUsers(filtered);
         setAllUsers(filtered);
       } catch (err) {
@@ -37,12 +39,18 @@ const UsersList = () => {
   };
 
   const handleViewProfile = (id) => {
-    navigate(`/userView/${id}`);
+    if (loggedInUser && id === loggedInUser.id) {
+      navigate("/profile/me");
+    } else {
+      navigate(`/userView/${id}`);
+    }
   };
 
   return (
     <div style={{ maxWidth: "1000px", margin: "10px auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center", color: "black" }}>Lista użytkowników</h2>
+      <h2 style={{ textAlign: "center", color: "black" }}>
+        Lista użytkowników
+      </h2>
       <SearchBar onSearch={handleSearch} />
 
       {users.length === 0 ? (

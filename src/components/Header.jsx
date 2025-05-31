@@ -8,9 +8,23 @@ const Header = () => {
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    navigate("/login");
+  // const handleLogout = () => {
+  //   localStorage.removeItem("loggedInUser");
+  //   navigate("/login");
+  // };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/v1/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Błąd podczas wylogowywania:", error);
+    } finally {
+      localStorage.removeItem("loggedInUser");
+      navigate("/login");
+    }
   };
 
   const toggleMenu = () => {
@@ -20,7 +34,7 @@ const Header = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        setMenuOpen(false); // Zamknij menu mobilne przy przejściu do desktopu
+        setMenuOpen(false);
       }
     };
 

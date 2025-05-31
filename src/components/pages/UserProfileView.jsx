@@ -16,11 +16,16 @@ import UserDetails from "../User/UserDetails";
 import {
   toggleUserStatus,
   updateUserDescription,
-  saveRatingToLocal,
+  // saveRatingToLocal,
   getUserRatingFromLocal,
-  getAverageRating,
   getCurrentUser,
 } from "../../services/userUtils";
+
+import {
+  addOrUpdateRate,
+  getAverageRate,
+  getUserRateForOwner,
+} from "../../services/rateService";
 
 const UserProfileView = () => {
   const { userId } = useParams();
@@ -41,9 +46,9 @@ const UserProfileView = () => {
         let userToLoad;
 
         if (userId === "me") {
-          userToLoad = await getCurrentUser(); 
+          userToLoad = await getCurrentUser();
         } else {
-          userToLoad = getUserById(Number(userId));
+          userToLoad = await getUserById(Number(userId));
           if (!userToLoad) {
             console.error(`Nie znaleziono użytkownika o ID ${userId}`);
             setUser(null);
@@ -80,11 +85,39 @@ const UserProfileView = () => {
   }, [loggedInUser, user]);
 
   useEffect(() => {
-    if (user) {
-      const { average, count } = getAverageRating(user.id);
-      setAverageRating(average);
-      setRatingCount(count);
-    }
+    const fetchUserRating = async () => {
+      if (!loggedInUser?.id || !user?.userId) return;
+
+      try {
+        const ratingData = await getUserRateForOwner(
+          loggedInUser.id,
+          user.userId
+        );
+        if (ratingData?.value) {
+          setRating(ratingData.value);
+          setRatingMessage(`Twoja ocena: ${ratingData.value} gwiazdek`);
+        }
+      } catch (error) {
+        console.error("Błąd pobierania oceny", error);
+      }
+    };
+
+    fetchUserRating();
+  }, [loggedInUser, user]);
+
+  useEffect(() => {
+    const fetchAverage = async () => {
+      if (user) {
+        try {
+          const { average, count } = await getAverageRate(user.userId);
+          setAverageRating(average);
+          setRatingCount(count);
+        } catch (error) {
+          console.error("Błąd pobierania średniej oceny:", error);
+        }
+      }
+    };
+    fetchAverage();
   }, [user]);
 
   if (!user) {
@@ -93,7 +126,6 @@ const UserProfileView = () => {
 
   const effectiveStatus = user.status || loggedInUser?.status;
   const isBlocked = effectiveStatus?.toUpperCase() === "BANNED";
-
 
   const isOwnProfile = loggedInUser?.id === user.id;
   const isAdmin = loggedInUser?.role === "ADMIN";
@@ -113,7 +145,6 @@ const UserProfileView = () => {
     }
   };
 
-
   const handleDescriptionSave = async ({
     firstName,
     lastName,
@@ -125,7 +156,6 @@ const UserProfileView = () => {
         surname: lastName,
         description,
       });
-
 
       const updatedUser = {
         ...user,
@@ -144,11 +174,26 @@ const UserProfileView = () => {
     }
   };
 
-  const handleRatingClick = (value) => {
+  const handleRatingClick = async (value) => {
     setRating(value);
     setRatingMessage(`Oceniłeś na ${value} gwiazdek`);
     if (loggedInUser && user && !isOwnProfile) {
-      saveRatingToLocal(loggedInUser.id, user.id, value);
+      try {
+        await addOrUpdateRate({
+          senderId: loggedInUser.id,
+          ownerId: user.userId,
+          value: value,
+        });
+
+        const { average, count } = await getAverageRate(user.userId);
+        setAverageRating(average);
+        setRatingCount(count);
+
+        // saveRatingToLocal(loggedInUser.userId, user.userId, value);
+      } catch (error) {
+        console.error("Błąd przy zapisie oceny:", error);
+        setRatingMessage("Nie udało się zapisać oceny");
+      }
     }
   };
 
@@ -176,7 +221,7 @@ const UserProfileView = () => {
           <p className="average-rating">
             Średnia ocen:{" "}
             {ratingCount > 0
-              ? `${averageRating} / 5 ★ (${ratingCount} ocen)`
+              ? `${averageRating?.toFixed(2)} / 5 ★ (${ratingCount} ocen)`
               : "Brak ocen"}
           </p>
         </div>

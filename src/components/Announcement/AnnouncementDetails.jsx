@@ -15,6 +15,14 @@ const AnnouncementDetails = () => {
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
+  const handleViewProfile = (id) => {
+    if (loggedInUser && id === loggedInUser.id) {
+      navigate("/profile/me");
+    } else {
+      navigate(`/userView/${id}`);
+    }
+  };
+
   useEffect(() => {
     const fetchAnnouncement = async () => {
       try {
@@ -34,9 +42,8 @@ const AnnouncementDetails = () => {
   }, [id]);
 
   const isAdmin = loggedInUser?.role === "ADMIN";
-  const isAuthor = loggedInUser?.id === (announcement?.userId || announcement?.user?.id);
-
-
+  const isAuthor =
+    loggedInUser?.id === (announcement?.userId || announcement?.user?.id);
 
   const handleDelete = async () => {
     const confirmation = window.confirm(
@@ -69,16 +76,17 @@ const AnnouncementDetails = () => {
         <p className="announcement-details__author">
           <strong>Autor:</strong>{" "}
           {author ? (
-            <Link
-              to={`/userView/${author.id}`}
+            <span
+              onClick={() => handleViewProfile(announcement.userId)}
               className="announcement-details__author-name"
             >
               {author.name || "Nieznane imię"} {author.surname || ""}
-            </Link>
+            </span>
           ) : (
             "Nieznany użytkownik"
           )}
         </p>
+
         <p className="announcement-details__date">
           <strong>Data:</strong>{" "}
           {new Date(announcement.createdAt).toLocaleString()}
@@ -109,7 +117,10 @@ const AnnouncementDetails = () => {
         )}
 
         {!isAuthor && author && (
-          <Link to={`/userView/${author.id}`} className="button-profile">
+          <Link
+            to={`/userView/${announcement.userId}`}
+            className="button-profile"
+          >
             Zobacz profil
           </Link>
         )}

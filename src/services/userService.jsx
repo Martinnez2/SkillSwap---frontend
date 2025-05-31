@@ -1,5 +1,6 @@
 import { getAnnouncements, deleteAnnouncement } from "./announcementService";
 import mockUsers from "../mock_data/mockUsers";
+import axios from "axios";
 
 const LOCAL_STORAGE_KEY = "users";
 
@@ -31,12 +32,15 @@ export async function getAllUsers() {
 
 export async function updateUserStatus(id, status) {
   try {
-    const response = await fetch(`http://localhost:8081/api/v1/users/${id}/status`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ status }),
-    });
+    const response = await fetch(
+      `http://localhost:8081/api/v1/users/${id}/status`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ status }),
+      }
+    );
     if (!response.ok) {
       throw new Error("Nie udało się zaktualizować statusu użytkownika");
     }
@@ -58,11 +62,14 @@ export async function deleteUserAccount(userId) {
       await deleteAnnouncement(ann.id);
     }
 
-    const response = await fetch(`http://localhost:8081/api/v1/users/${userId}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `http://localhost:8081/api/v1/users/${userId}`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      }
+    );
     if (!response.ok) {
       throw new Error("Nie udało się usunąć użytkownika");
     }
@@ -72,8 +79,6 @@ export async function deleteUserAccount(userId) {
     throw error;
   }
 }
-
-
 
 export async function toggleUserStatus(user, isBlocked) {
   const newStatus = isBlocked ? "ACTIVE" : "BANNED";
@@ -87,17 +92,29 @@ export async function toggleUserStatus(user, isBlocked) {
       await deleteAnnouncement(ann.id);
     }
   }
-  
+
   return updatedUser;
 }
 
+// export function getUserById(id) {
+//   const users = getUsers();
+//   const user = users.find((user) => user.id === Number(id));
+//   console.log("Fetched Users:", users);
+//   console.log("Found User by ID:", user);
+//   return user;
+// }
 
-export function getUserById(id) {
-  const users = getUsers();
-  const user = users.find((user) => user.id === Number(id));
-  console.log("Fetched Users:", users);
-  console.log("Found User by ID:", user);
-  return user;
+export async function getUserById(userId) {
+  try {
+    const response = await axios.get(
+      `http://localhost:8081/api/v1/user-details/${userId}`,
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkownika po ID:", error);
+    throw error;
+  }
 }
 
 export function updateUser(updatedUser) {

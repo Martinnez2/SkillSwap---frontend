@@ -24,27 +24,21 @@ const LoginPage = () => {
 
     try {
       // 1. Logowanie użytkownika (POST na backend)
-      const loginResponse = await fetch(
-        "http://localhost:8081/api/v1/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // aby przesłać i odebrać ciasteczka
-          body: JSON.stringify(credentials),
-        }
-      );
+      const loginResponse = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // aby przesłać i odebrać ciasteczka
+        body: JSON.stringify(credentials),
+      });
 
       if (!loginResponse.ok) {
         throw new Error("Nieprawidłowa nazwa użytkownika lub hasło.");
       }
 
       // 2. Pobranie danych zalogowanego użytkownika
-      const userDetailsResponse = await fetch(
-        "http://localhost:8081/api/v1/user-details/me",
-        {
-          credentials: "include",
-        }
-      );
+      const userDetailsResponse = await fetch("api/v1/user-details/me", {
+        credentials: "include",
+      });
 
       if (!userDetailsResponse.ok) {
         throw new Error("Błąd podczas pobierania danych użytkownika.");
