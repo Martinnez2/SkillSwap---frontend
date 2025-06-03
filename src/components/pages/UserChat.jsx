@@ -4,68 +4,132 @@ import "../../styles/UserChat.css";
 import { getUserById } from "../../services/userService";
 import { getChatMessages, sendMessage } from "../../services/chatUtils";
 
-const LOCAL_CHAT_KEY = "chatMessages";
-
 const UserChat = () => {
   const { userId } = useParams();
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-  const recipient = getUserById(Number(userId));
+  const [loggedUserDetails, setLoggedUserDetails] = useState(null);
+  const [recipient, setRecipient] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const fetchLoggedInUserDetails = async () => {
+      const rawUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!rawUser) return;
+
+      try {
+        const userDetails = await getUserById(rawUser.id);
+        setLoggedUserDetails(userDetails);
+      } catch (err) {
+        console.error(
+          "Błąd podczas pobierania danych zalogowanego użytkownika:",
+          err
+        );
+      }
+    };
+
+    fetchLoggedInUserDetails();
+  }, []);
+
+  useEffect(() => {
+    const fetchRecipient = async () => {
+      try {
+        const userToLoad = await getUserById(Number(userId));
+        if (!userToLoad) {
+          console.error(`Nie znaleziono użytkownika o ID ${userId}`);
+          setRecipient(null);
+          return;
+        }
+        setRecipient(userToLoad);
+        console.log("Pobrany użytkownik:", userToLoad);
+      } catch (error) {
+        console.error("Błąd podczas pobierania użytkownika:", error);
+        setRecipient(null);
+      }
+    };
+
+    fetchRecipient();
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (loggedUserDetails && recipient) {
+        try {
+          const relevantMessages = await getChatMessages(
+            loggedUserDetails.userId,
+            recipient.userId
+          );
+          setMessages(relevantMessages);
+        } catch (err) {
+          console.error("Błąd podczas pobierania wiadomości:", err);
+        }
+      }
+    };
+    fetchMessages();
+  }, [loggedUserDetails, recipient]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
-    if (loggedInUser && recipient) {
-      const relevantMessages = getChatMessages(loggedInUser.id, recipient.id);
-      setMessages((prevMessages) => {
-        if (JSON.stringify(prevMessages) !== JSON.stringify(relevantMessages)) {
-          return relevantMessages;
-        }
-        return prevMessages;
-      });
+    if (loggedUserDetails && recipient) {
+      console.log("ID osoby odwiedzającej czat:", loggedUserDetails.userId);
+      console.log("ID odbiorcy wiadomości:", recipient.userId);
     }
-  }, [loggedInUser, recipient]);
+  }, [loggedUserDetails, recipient]);
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
-    const message = sendMessage(loggedInUser.id, recipient.id, newMessage);
-    setMessages((prev) => [...prev, message]);
-    setNewMessage("");
+    try {
+      const sentMessage = await sendMessage(
+        loggedUserDetails.userId,
+        recipient.userId,
+        newMessage
+      );
+      setMessages((prevMessages) => [...prevMessages, sentMessage]);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Błąd podczas wysyłania wiadomości:", error);
+    }
   };
 
   if (!recipient) {
     return <p>Nie znaleziono użytkownika do rozmowy.</p>;
   }
 
+  console.log("recipient:", recipient);
+  console.log("loggeduser:", loggedUserDetails);
+
   return (
     <div className="chat-container">
       <h2>
         Czat z {recipient.name} {recipient.surname}
       </h2>
+
       <div className="message-list">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${
-              msg.senderId === loggedInUser.id ? "sender" : "receiver"
-            }`}
-          >
-            <div className="bubble">
-              <p>{msg.text}</p>
-              <span className="timestamp">
-                {new Date(msg.timestamp).toLocaleTimeString()}
-              </span>
+        {messages.map((msg) => {
+          const senderId = msg.sender.userId || msg.sender.id;
+          const isSender = senderId === loggedUserDetails.userId;
+          return (
+            <div
+              key={msg.id || msg.timestamp}
+              className={`message ${isSender ? "sender" : "receiver"}`}
+            >
+              <div className="bubble">
+                <p>{msg.text}</p>
+                <span className="timestamp">
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={messagesEndRef} />
       </div>
+
       <form onSubmit={handleSend} className="chat-input">
         <input
           type="text"

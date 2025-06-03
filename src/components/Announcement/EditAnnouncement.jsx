@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAnnouncementById, updateAnnouncement } from "../../services/announcementService";
+import {
+  getAnnouncementById,
+  updateAnnouncement,
+} from "../../services/announcementService";
 import "../../styles/AddAnnouncement.css";
 
 const EditAnnouncement = () => {
@@ -35,7 +38,10 @@ const EditAnnouncement = () => {
         const loggedInUserId = loggedInUser?.id || loggedInUser?.userId;
 
         // Sprawdzenie uprawnień – porównujemy właściwy identyfikator z announcement.userId
-        if (loggedInUserId !== announcement.userId && loggedInUser?.role !== "ADMIN") {
+        if (
+          loggedInUserId !== announcement.userId &&
+          loggedInUser?.role !== "ADMIN"
+        ) {
           alert("Nie masz uprawnień do edycji tego ogłoszenia.");
           return navigate("/");
         }
@@ -113,6 +119,11 @@ const EditAnnouncement = () => {
                 <option value="3">Muzyka</option>
                 <option value="4">Programowanie</option>
                 <option value="5">Sztuka</option>
+                <option value="6">Gotowanie</option>
+                <option value="7">Majsterkowanie</option>
+                <option value="8">Fotografia</option>
+                <option value="9">Biznes</option>
+                <option value="10">Taniec</option>
               </select>
 
               <label>Widoczność ogłoszenia:</label>

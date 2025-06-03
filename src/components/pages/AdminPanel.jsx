@@ -29,7 +29,10 @@ const AdminPanel = () => {
 
   const handleBlock = async (user) => {
     try {
-      const updatedUser = await toggleUserStatus(user, user.status === "BANNED");
+      const updatedUser = await toggleUserStatus(
+        user,
+        user.status === "BANNED"
+      );
       setUsers((prevUsers) =>
         prevUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u))
       );
@@ -64,7 +67,8 @@ const AdminPanel = () => {
   };
 
   const handleSort = (field) => {
-    const newSortOrder = sortField === field && sortOrder === "asc" ? "desc" : "asc";
+    const newSortOrder =
+      sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
     setSortOrder(newSortOrder);
   };
@@ -105,17 +109,31 @@ const AdminPanel = () => {
         <thead>
           <tr>
             <th>Użytkownik</th>
-            <th onClick={() => handleSort("surname")} style={{ cursor: "pointer" }}>
-              Imię i Nazwisko {sortField === "surname" && (sortOrder === "asc" ? "↓" : "↑")}
+            <th
+              onClick={() => handleSort("surname")}
+              style={{ cursor: "pointer" }}
+            >
+              Imię i Nazwisko{" "}
+              {sortField === "surname" && (sortOrder === "asc" ? "↓" : "↑")}
             </th>
-            <th onClick={() => handleSort("email")} style={{ cursor: "pointer" }}>
+            <th
+              onClick={() => handleSort("email")}
+              style={{ cursor: "pointer" }}
+            >
               Email {sortField === "email" && (sortOrder === "asc" ? "↓" : "↑")}
             </th>
-            <th onClick={() => handleSort("role")} style={{ cursor: "pointer" }}>
+            <th
+              onClick={() => handleSort("role")}
+              style={{ cursor: "pointer" }}
+            >
               Rola {sortField === "role" && (sortOrder === "asc" ? "↓" : "↑")}
             </th>
-            <th onClick={() => handleSort("status")} style={{ cursor: "pointer" }}>
-              Status {sortField === "status" && (sortOrder === "asc" ? "↓" : "↑")}
+            <th
+              onClick={() => handleSort("status")}
+              style={{ cursor: "pointer" }}
+            >
+              Status{" "}
+              {sortField === "status" && (sortOrder === "asc" ? "↓" : "↑")}
             </th>
             <th>Profil</th>
             <th>Akcje</th>
@@ -138,7 +156,9 @@ const AdminPanel = () => {
                 {user.status === "ACTIVE" ? (
                   <button onClick={() => handleBlock(user)}>Zablokuj</button>
                 ) : (
-                  <button onClick={() => handleUnblock(user.id)}>Odblokuj</button>
+                  <button onClick={() => handleUnblock(user.id)}>
+                    Odblokuj
+                  </button>
                 )}
                 <button onClick={() => handleDelete(user.id)}>Usuń</button>
               </td>

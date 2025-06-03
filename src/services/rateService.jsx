@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/api/v1/rate";
+const BASE_URL = "/api/v1/rate";
 
 export const addOrUpdateRate = async (rateRequest) => {
   const response = await axios.post(BASE_URL, rateRequest);

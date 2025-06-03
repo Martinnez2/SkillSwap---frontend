@@ -1,5 +1,3 @@
-// src/pages/RegisterPage.jsx
-
 import React, { useState } from "react";
 import "../../styles/RegisterPage.css";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +33,7 @@ const RegisterPage = () => {
     setFieldErrors({});
 
     try {
-      const res = await fetch("http://localhost:8081/api/v1/auth/register", {
+      const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -106,6 +104,21 @@ const RegisterPage = () => {
             {fieldErrors.email && (
               <small className="error">{fieldErrors.email}</small>
             )}
+
+            {/* Przycisk zmiany roli użytkownika */}
+            {/* <label>Rola:</label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+            >
+              <option value="USER">Użytkownik</option>
+              <option value="ADMIN">Administrator</option>
+            </select>
+            {fieldErrors.role && (
+              <small className="error">{fieldErrors.role}</small>
+            )} */}
 
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Rejestruję..." : "Zarejestruj się"}

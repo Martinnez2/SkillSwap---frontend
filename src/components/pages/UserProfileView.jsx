@@ -3,20 +3,19 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import "../../styles/UserProfileView.css";
 import {
   getUserById,
-  updateUserStatus,
+  // updateUserStatus,
   deleteUserAccount,
 } from "../../services/userService";
 import {
-  getAnnouncements,
-  deleteAnnouncement,
+  // getAnnouncements,
+  // deleteAnnouncement,
   getAnnouncementsByUserId,
 } from "../../services/announcementService";
 import UserDetails from "../User/UserDetails";
 
 import {
-  toggleUserStatus,
+  // toggleUserStatus,
   updateUserDescription,
-  // saveRatingToLocal,
   getUserRatingFromLocal,
   getCurrentUser,
 } from "../../services/userUtils";
@@ -130,20 +129,20 @@ const UserProfileView = () => {
   const isOwnProfile = loggedInUser?.id === user.id;
   const isAdmin = loggedInUser?.role === "ADMIN";
 
-  const handleToggleBlock = async () => {
-    try {
-      const updatedUser = await toggleUserStatus(
-        user,
-        isBlocked,
-        updateUserStatus,
-        deleteAnnouncement,
-        getAnnouncements
-      );
-      setUser(updatedUser);
-    } catch (error) {
-      console.error("Błąd przy zmianie statusu:", error);
-    }
-  };
+  // const handleToggleBlock = async () => {
+  //   try {
+  //     const updatedUser = await toggleUserStatus(
+  //       user,
+  //       isBlocked,
+  //       updateUserStatus,
+  //       deleteAnnouncement,
+  //       getAnnouncements
+  //     );
+  //     setUser(updatedUser);
+  //   } catch (error) {
+  //     console.error("Błąd przy zmianie statusu:", error);
+  //   }
+  // };
 
   const handleDescriptionSave = async ({
     firstName,
@@ -188,8 +187,6 @@ const UserProfileView = () => {
         const { average, count } = await getAverageRate(user.userId);
         setAverageRating(average);
         setRatingCount(count);
-
-        // saveRatingToLocal(loggedInUser.userId, user.userId, value);
       } catch (error) {
         console.error("Błąd przy zapisie oceny:", error);
         setRatingMessage("Nie udało się zapisać oceny");
@@ -243,7 +240,7 @@ const UserProfileView = () => {
           </>
         )}
 
-        {isAdmin && (
+        {/* {isAdmin && (
           <button
             onClick={handleToggleBlock}
             style={{
@@ -258,7 +255,7 @@ const UserProfileView = () => {
           >
             {isBlocked ? "Odblokuj konto" : "Zablokuj konto"}
           </button>
-        )}
+        )} */}
 
         {isBlocked && (
           <div className="blocked-overlay">
@@ -303,7 +300,7 @@ const UserProfileView = () => {
               {ratingMessage && <p>{ratingMessage}</p>}
             </div>
 
-            <Link to={`/chat/${user.id}`}>
+            <Link to={`/chat/${user.userId}`}>
               <button className="message-button">Wyślij wiadomość</button>
             </Link>
           </>

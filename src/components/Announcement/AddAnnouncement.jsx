@@ -7,7 +7,6 @@ const AddAnnouncement = () => {
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")) || {};
   const isBlocked = loggedInUser?.status?.toUpperCase() === "BANNED";
 
-
   const [formData, setFormData] = useState({
     skillId: "",
     title: "",
@@ -107,6 +106,11 @@ const AddAnnouncement = () => {
                   <option value="3">Muzyka</option>
                   <option value="4">Programowanie</option>
                   <option value="5">Sztuka</option>
+                  <option value="6">Gotowanie</option>
+                  <option value="7">Majsterkowanie</option>
+                  <option value="8">Fotografia</option>
+                  <option value="9">Biznes</option>
+                  <option value="10">Taniec</option>
                 </select>
 
                 <label>Widoczność ogłoszenia:</label>

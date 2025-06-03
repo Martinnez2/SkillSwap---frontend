@@ -54,7 +54,12 @@ const AnnouncementDetails = () => {
     if (isAuthor || isAdmin) {
       try {
         await deleteAnnouncement(announcement.id);
-        navigate("/profile/me");
+
+        if (isAdmin && !isAuthor) {
+          navigate("/announcements");
+        } else {
+          navigate("/profile/me");
+        }
       } catch (error) {
         console.error("Błąd podczas usuwania ogłoszenia:", error);
         alert("Nie udało się usunąć ogłoszenia.");

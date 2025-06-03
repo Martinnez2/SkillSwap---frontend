@@ -1,28 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8081/api/v1/announcements";
+const API_URL = "/api/v1/announcements";
 
-// export async function getAllAnnouncements() {
-//   try {
-//     const response = await axios.get(API_URL);
-//     return response.data.content; // bo Spring Page<AnnouncementDTO>
-//   } catch (error) {
-//     console.error("Błąd podczas pobierania ogłoszeń:", error);
-//     return [];
-//   }
-// }
-
-// export async function getAnnouncementById(id) {
-//   try {
-//     const response = await axios.get(`${API_URL}/${id}`);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Nie udało się pobrać ogłoszenia:", error);
-//     return null;
-//   }
-// }
-
-// 1.
 export async function createAnnouncement(newAnnouncement) {
   try {
     const response = await axios.post(API_URL, newAnnouncement);
@@ -33,11 +12,10 @@ export async function createAnnouncement(newAnnouncement) {
   }
 }
 
-// 2.
 export const getAnnouncementsByUserId = async (userId) => {
   try {
     const response = await fetch(`/api/v1/announcements/user/${userId}`, {
-      credentials: "include", // <-- ważne!
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -74,29 +52,6 @@ export async function deleteAnnouncement(id) {
   return true;
 }
 
-// export async function deleteAnnouncement(id) {
-//   try {
-//     await axios.delete(`${API_URL}/${id}`);
-//     return true;
-//   } catch (error) {
-//     console.error("Nie udało się usunąć ogłoszenia:", error);
-//     return false;
-//   }
-// }
-
-// export async function updateAnnouncement(updatedAnnouncement) {
-//   try {
-//     const response = await axios.put(
-//       `${API_URL}/${updatedAnnouncement.id}`,
-//       updatedAnnouncement
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Błąd podczas aktualizacji ogłoszenia:", error);
-//     return null;
-//   }
-// }
-
 export async function updateAnnouncement(updatedAnnouncement) {
   try {
     const response = await fetch(
@@ -121,29 +76,9 @@ export async function updateAnnouncement(updatedAnnouncement) {
   }
 }
 
-//import mockAnnouncements from "../mock_data/mockAnnouncements";
-
-const LOCAL_STORAGE_KEY_ANNOUNCEMENTS = "announcements";
-const LOCAL_STORAGE_KEY_USERS = "users";
-
-// function getDataFromLocalStorage(key, mockData) {
-//   const data = JSON.parse(localStorage.getItem(key));
-//   if (!data) {
-//     console.warn(
-//       `Brak danych w localStorage dla klucza: ${key}. Używamy danych mock.`
-//     );
-//     return mockData;
-//   }
-//   return data;
-// }
-
-function saveDataToLocalStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-
 export async function getAnnouncements() {
   try {
-    const response = await fetch("http://localhost:8081/api/v1/announcements", {
+    const response = await fetch("/api/v1/announcements", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -151,22 +86,14 @@ export async function getAnnouncements() {
       throw new Error(`Błąd komunikacji z serwerem: ${response.statusText}`);
     }
     const data = await response.json();
-    // Wyciągamy rzeczywistą listę ogłoszeń z obiektu HATEOAS
-    const announcements = data._embedded ? data._embedded.announcementDTOList : [];
+    const announcements = data._embedded
+      ? data._embedded.announcementDTOList
+      : [];
     return announcements;
   } catch (error) {
     console.error("Błąd podczas pobierania ogłoszeń:", error);
     throw error;
   }
-}
-
-
-export function getAllAnnouncements() {
-  return getAnnouncements();
-}
-
-export function saveAnnouncements(data) {
-  saveDataToLocalStorage(LOCAL_STORAGE_KEY_ANNOUNCEMENTS, data);
 }
 
 export const getAllAnnouncementsWithUsers = async () => {
