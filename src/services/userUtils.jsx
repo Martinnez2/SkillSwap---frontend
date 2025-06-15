@@ -32,7 +32,7 @@ export const toggleUserStatus = (
 
 export const getCurrentUser = async () => {
   const response = await fetch("/api/v1/user-details/me", {
-    credentials: "include", // jeśli używasz cookie
+    credentials: "include",
   });
 
   if (!response.ok) {
@@ -42,14 +42,13 @@ export const getCurrentUser = async () => {
   return await response.json();
 };
 
-// Aktualizuje opis użytkownika i lokalnie zapisuje dane, jeśli to własny profil
 export async function updateUserDescription(
   userId,
   { name, surname, description }
 ) {
   try {
     const response = await axios.post(
-      "http://localhost:8081/api/v1/user-details",
+      "/api/v1/user-details",
       {
         userId,
         name,

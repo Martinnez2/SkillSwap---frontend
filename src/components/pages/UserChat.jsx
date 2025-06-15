@@ -11,10 +11,13 @@ const UserChat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
+  const [loggedUserRaw, setLoggedUserRaw] = useState(null);
+  const isNameSet = loggedUserDetails?.name && loggedUserDetails?.surname;
 
   useEffect(() => {
     const fetchLoggedInUserDetails = async () => {
       const rawUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      setLoggedUserRaw(rawUser);
       if (!rawUser) return;
 
       try {
@@ -41,7 +44,7 @@ const UserChat = () => {
           return;
         }
         setRecipient(userToLoad);
-        console.log("Pobrany użytkownik:", userToLoad);
+        // console.log("Pobrany użytkownik:", userToLoad);
       } catch (error) {
         console.error("Błąd podczas pobierania użytkownika:", error);
         setRecipient(null);
@@ -74,8 +77,8 @@ const UserChat = () => {
 
   useEffect(() => {
     if (loggedUserDetails && recipient) {
-      console.log("ID osoby odwiedzającej czat:", loggedUserDetails.userId);
-      console.log("ID odbiorcy wiadomości:", recipient.userId);
+      // console.log("ID osoby odwiedzającej czat:", loggedUserDetails.userId);
+      // console.log("ID odbiorcy wiadomości:", recipient.userId);
     }
   }, [loggedUserDetails, recipient]);
 
@@ -96,12 +99,20 @@ const UserChat = () => {
     }
   };
 
+  if (loggedUserRaw?.status?.toUpperCase() === "BANNED") {
+    return (
+      <div className="block-message">
+        Twoje konto jest zablokowane. Nie możesz korzystać z czatu.
+      </div>
+    );
+  }
+
   if (!recipient) {
     return <p>Nie znaleziono użytkownika do rozmowy.</p>;
   }
 
-  console.log("recipient:", recipient);
-  console.log("loggeduser:", loggedUserDetails);
+  // console.log("recipient:", recipient);
+  // console.log("loggeduser:", loggedUserDetails);
 
   return (
     <div className="chat-container">
@@ -130,16 +141,22 @@ const UserChat = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSend} className="chat-input">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Napisz wiadomość..."
-          style={{ backgroundColor: "rgb(157, 157, 157)" }}
-        />
-        <button type="submit">Wyślij</button>
-      </form>
+      {isNameSet ? (
+        <form onSubmit={handleSend} className="chat-input">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Napisz wiadomość..."
+            style={{ backgroundColor: "rgb(157, 157, 157)" }}
+          />
+          <button type="submit">Wyślij</button>
+        </form>
+      ) : (
+        <div className="info-message">
+          Aby korzystać z czatu, uzupełnij proszę brakujące dane na profilu.
+        </div>
+      )}
     </div>
   );
 };

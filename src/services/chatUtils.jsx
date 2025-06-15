@@ -33,3 +33,16 @@ export async function sendMessage(senderId, receiverId, text) {
     throw error;
   }
 }
+
+export async function getConversationStatus(senderId, receiverId) {
+  try {
+    const response = await axios.get(`${API_BASE}/hasConversation`, {
+      params: { senderId, receiverId },
+      withCredentials: true,
+    });
+    return response.data; // endpoint zwraca Boolean
+  } catch (error) {
+    console.error("Błąd podczas sprawdzania konwersacji:", error);
+    throw error;
+  }
+}

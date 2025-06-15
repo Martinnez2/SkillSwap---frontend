@@ -8,11 +8,6 @@ const Header = () => {
   const user = JSON.parse(localStorage.getItem("loggedInUser"));
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("loggedInUser");
-  //   navigate("/login");
-  // };
-
   const handleLogout = async () => {
     try {
       await fetch("/api/v1/auth/logout", {
@@ -44,7 +39,6 @@ const Header = () => {
 
   return (
     <header className="header">
-      {/* Mobile bar: only on small screens */}
       <div className="mobile-bar">
         <Link to="/" className="logo-link">
           <img src={logo} alt="SkillSwap logo" style={{ height: "40px" }} />
@@ -54,7 +48,6 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Full navigation - visible on desktop only */}
       <div className="desktop-nav">
         <div className="header-left">
           <Link to="/" className="nav-link">
@@ -101,7 +94,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile dropdown menu */}
       {menuOpen && (
         <div className="mobile-menu">
           <Link

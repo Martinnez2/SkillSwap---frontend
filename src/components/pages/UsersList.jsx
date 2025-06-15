@@ -68,7 +68,12 @@ const UsersList = () => {
                 </p>
               )}
               <p>
-                <strong>Status:</strong> {user.status || "brak"}
+                <strong>Status:</strong>{" "}
+                {user.status === "ACTIVE"
+                  ? "Aktywny"
+                  : user.status === "BANNED"
+                  ? "Zablokowany"
+                  : "Brak"}
               </p>
               {user.description && (
                 <p className="userList-description">{user.description}</p>

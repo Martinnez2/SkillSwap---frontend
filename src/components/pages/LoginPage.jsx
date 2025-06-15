@@ -23,11 +23,10 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      // 1. Logowanie użytkownika (POST na backend)
       const loginResponse = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // aby przesłać i odebrać ciasteczka
+        credentials: "include",
         body: JSON.stringify(credentials),
       });
 
@@ -35,7 +34,6 @@ const LoginPage = () => {
         throw new Error("Nieprawidłowa nazwa użytkownika lub hasło.");
       }
 
-      // 2. Pobranie danych zalogowanego użytkownika
       const userDetailsResponse = await fetch("api/v1/user-details/me", {
         credentials: "include",
       });
@@ -46,10 +44,8 @@ const LoginPage = () => {
 
       const userDetails = await userDetailsResponse.json();
 
-      // 3. Zapisz dane użytkownika w localStorage
       localStorage.setItem("loggedInUser", JSON.stringify(userDetails));
 
-      // 4. Przekieruj na stronę główną
       navigate("/home");
     } catch (err) {
       setError(err.message);

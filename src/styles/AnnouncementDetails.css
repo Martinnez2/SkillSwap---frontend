@@ -109,6 +109,23 @@
   color: black;
 }
 
+.button-send {
+  color: #fff;
+  background-color: rgba(208, 147, 5, 0.8);
+  border: none;
+  border-radius: 5px;
+  padding: 14px 24px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+  margin-right: 15px;
+}
+
+.button-send:hover {
+  background-color: rgba(208, 147, 5, 0.6);
+  color: white;
+}
+
 @media (max-width: 960px) {
   .announcement-details {
     width: 90%;

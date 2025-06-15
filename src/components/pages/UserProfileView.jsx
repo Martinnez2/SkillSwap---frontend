@@ -26,6 +26,8 @@ import {
   getUserRateForOwner,
 } from "../../services/rateService";
 
+import { getConversationStatus } from "../../services/chatUtils";
+
 const UserProfileView = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -38,6 +40,8 @@ const UserProfileView = () => {
   const [ratingCount, setRatingCount] = useState(0);
 
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  const [hasConversation, setHasConversation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -118,6 +122,24 @@ const UserProfileView = () => {
     };
     fetchAverage();
   }, [user]);
+
+  useEffect(() => {
+    const checkConversation = async () => {
+      if (loggedInUser && user && loggedInUser.id !== user.id) {
+        try {
+          const conversationExists = await getConversationStatus(
+            loggedInUser.id,
+            user.userId
+          );
+          setHasConversation(conversationExists);
+        } catch (error) {
+          console.error("Błąd podczas sprawdzania konwersacji:", error);
+        }
+      }
+    };
+
+    checkConversation();
+  }, [loggedInUser, user]);
 
   if (!user) {
     return <p>Użytkownik nie został znaleziony.</p>;
@@ -284,21 +306,28 @@ const UserProfileView = () => {
 
         {!isOwnProfile && !isBlocked && !isAdmin && (
           <>
-            <div className="rating-section">
-              <h3>Oceń tego użytkownika</h3>
-              <div className="stars-container">
-                {[1, 2, 3, 4, 5].map((starValue) => (
-                  <span
-                    key={starValue}
-                    className={`star ${starValue <= rating ? "filled" : ""}`}
-                    onClick={() => handleRatingClick(starValue)}
-                  >
-                    &#9733;
-                  </span>
-                ))}
+            {hasConversation ? (
+              <div className="rating-section">
+                <h3>Oceń tego użytkownika</h3>
+                <div className="stars-container">
+                  {[1, 2, 3, 4, 5].map((starValue) => (
+                    <span
+                      key={starValue}
+                      className={`star ${starValue <= rating ? "filled" : ""}`}
+                      onClick={() => handleRatingClick(starValue)}
+                    >
+                      &#9733;
+                    </span>
+                  ))}
+                </div>
+                {ratingMessage && <p>{ratingMessage}</p>}
               </div>
-              {ratingMessage && <p>{ratingMessage}</p>}
-            </div>
+            ) : (
+              <p className="rating-info-message">
+                Aby ocenić tego użytkownika, musisz najpierw wysłać do niego
+                wiadomość.
+              </p>
+            )}
 
             <Link to={`/chat/${user.userId}`}>
               <button className="message-button">Wyślij wiadomość</button>

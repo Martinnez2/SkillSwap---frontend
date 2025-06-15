@@ -120,6 +120,14 @@ const AnnouncementDetails = () => {
             </button>
           </>
         )}
+        {!isAuthor && !isAdmin && author && (
+          <Link
+            to={`/chat/${author.userId || author.id}`}
+            className="button-send"
+          >
+            Wyślij wiadomość
+          </Link>
+        )}
 
         {!isAuthor && author && (
           <Link
