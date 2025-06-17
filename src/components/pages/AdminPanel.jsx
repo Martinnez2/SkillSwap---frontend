@@ -1,16 +1,13 @@
+// src/pages/AdminPanel.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   getAllUsers,
   updateUserStatus,
   deleteUserAccount,
+  toggleUserStatus,
 } from "../../services/userService";
 import "../../styles/AdminPanel.css";
-import {
-  getAnnouncements,
-  deleteAnnouncement,
-} from "../../services/announcementService";
-import { toggleUserStatus } from "../../services/userUtils"; 
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -19,37 +16,54 @@ const AdminPanel = () => {
   const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
-    setUsers(getAllUsers());
+    const fetchUsers = async () => {
+      try {
+        const usersData = await getAllUsers();
+        setUsers(usersData);
+      } catch (error) {
+        console.error("Błąd przy pobieraniu użytkowników:", error);
+      }
+    };
+    fetchUsers();
   }, []);
 
-  const handleBlock = (user) => {
-    const updatedUser = toggleUserStatus(
-      user,
-      user.status === "blocked", 
-      updateUserStatus,
-      deleteAnnouncement,
-      getAnnouncements
-    );
-    setUsers((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id === updatedUser.id ? { ...u, status: updatedUser.status } : u
-      )
-    );
+  const handleBlock = async (user) => {
+    try {
+      const updatedUser = await toggleUserStatus(
+        user,
+        user.status === "BANNED"
+      );
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+      );
+    } catch (error) {
+      console.error("Błąd przy blokowaniu/uaktywnianiu użytkownika:", error);
+    }
   };
 
-  const handleUnblock = (id) => {
-    const updatedUsers = updateUserStatus(id, "active");
-    setUsers(updatedUsers);
+  const handleUnblock = async (id) => {
+    try {
+      const updatedUser = await updateUserStatus(id, "ACTIVE");
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+      );
+    } catch (error) {
+      console.error("Błąd przy odblokowywaniu użytkownika:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    const confirm = window.confirm(
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
       "Czy na pewno chcesz usunąć tego użytkownika i jego ogłoszenia?"
     );
-    if (!confirm) return;
-    deleteUserAccount(id);
-    const updatedUsers = getAllUsers();
-    setUsers(updatedUsers);
+    if (!confirmDelete) return;
+    try {
+      await deleteUserAccount(id);
+      const updatedUsers = await getAllUsers();
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error("Błąd przy usuwaniu użytkownika:", error);
+    }
   };
 
   const handleSort = (field) => {
@@ -76,7 +90,6 @@ const AdminPanel = () => {
       if (sortField === "name" || sortField === "surname") {
         return compare("surname") || compare("name");
       }
-
       return compare(sortField);
     });
 
@@ -140,7 +153,7 @@ const AdminPanel = () => {
                 <Link to={`/userView/${user.id}`}>Zobacz profil</Link>
               </td>
               <td>
-                {user.status === "active" ? (
+                {user.status === "ACTIVE" ? (
                   <button onClick={() => handleBlock(user)}>Zablokuj</button>
                 ) : (
                   <button onClick={() => handleUnblock(user.id)}>

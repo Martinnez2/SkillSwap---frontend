@@ -27,6 +27,8 @@ h2 {
   margin: 10px 0;
   display: flex;
   flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .message .bubble {
@@ -85,4 +87,33 @@ h2 {
 
 .chat-input button:hover {
   background-color: rgba(208, 147, 5, 0.5);
+}
+
+.block-message {
+  pointer-events: auto;
+  font-size: 1.8rem;
+  color: #cc0000;
+  font-weight: bold;
+  background-color: #fff;
+  padding: 20px 30px;
+  border: 2px solid #cc0000;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  margin: 40px auto;
+  max-width: 600px;
+  margin-top: 200px;
+  margin-bottom: 200px;
+}
+
+.info-message {
+  color: #000000;
+  background-color: #f1f1f1;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  max-width: 600px;
+  margin: 10px auto;
+  text-align: center;
 }

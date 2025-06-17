@@ -11,10 +11,19 @@ const UsersList = () => {
   const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
-    const data = getAllUsers();
-    const filtered = data.filter((user) => user?.role !== "ADMIN");
-    setUsers(filtered);
-    setAllUsers(filtered);
+    async function fetchUsers() {
+      try {
+        const data = await getAllUsers();
+        const filtered = data.filter(
+          (user) => user?.role !== "ADMIN" && (user.name || user.surname)
+        );
+        setUsers(filtered);
+        setAllUsers(filtered);
+      } catch (err) {
+        console.error("Błąd pobierania użytkowników: ", err);
+      }
+    }
+    fetchUsers();
   }, []);
 
   const isAdmin = loggedInUser?.role === "ADMIN";
@@ -30,7 +39,11 @@ const UsersList = () => {
   };
 
   const handleViewProfile = (id) => {
-    navigate(`/userView/${id}`);
+    if (loggedInUser && id === loggedInUser.id) {
+      navigate("/profile/me");
+    } else {
+      navigate(`/userView/${id}`);
+    }
   };
 
   return (
@@ -55,7 +68,12 @@ const UsersList = () => {
                 </p>
               )}
               <p>
-                <strong>Status:</strong> {user.status || "brak"}
+                <strong>Status:</strong>{" "}
+                {user.status === "ACTIVE"
+                  ? "Aktywny"
+                  : user.status === "BANNED"
+                  ? "Zablokowany"
+                  : "Brak"}
               </p>
               {user.description && (
                 <p className="userList-description">{user.description}</p>

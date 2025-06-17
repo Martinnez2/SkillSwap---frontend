@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/LoginPage.css";
-//import mockUsers from "../../mock_data/mockUsers";
-import { getAllUsers } from "../../services/userService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -10,7 +8,6 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
-
   const [error, setError] = useState(null);
 
   const handleChange = (e) => {
@@ -22,25 +19,36 @@ const LoginPage = () => {
     setError(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const users = getAllUsers();
-    const user = users.find(
-      (u) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
 
-    if (user) {
-      console.log("Zalogowano pomyślnie:", user.username);
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      if (user.role === "ADMIN") {
-        navigate("/home");
-      } else {
-        navigate("/home");
+    try {
+      const loginResponse = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(credentials),
+      });
+
+      if (!loginResponse.ok) {
+        throw new Error("Nieprawidłowa nazwa użytkownika lub hasło.");
       }
-    } else {
-      setError("Nieprawidłowa nazwa użytkownika lub hasło.");
+
+      const userDetailsResponse = await fetch("api/v1/user-details/me", {
+        credentials: "include",
+      });
+
+      if (!userDetailsResponse.ok) {
+        throw new Error("Błąd podczas pobierania danych użytkownika.");
+      }
+
+      const userDetails = await userDetailsResponse.json();
+
+      localStorage.setItem("loggedInUser", JSON.stringify(userDetails));
+
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
     }
   };
 

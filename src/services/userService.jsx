@@ -1,79 +1,91 @@
-import { getAnnouncements, saveAnnouncements } from "./announcementService";
-import mockUsers from "../mock_data/mockUsers";
+import { getAnnouncements, deleteAnnouncement } from "./announcementService";
+import axios from "axios";
 
-const LOCAL_STORAGE_KEY = "users";
-
-function getUsers() {
-  const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-  return users || mockUsers;
+export async function getAllUsers() {
+  try {
+    const response = await fetch("/api/v1/users", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`Błąd komunikacji z serwerem: ${response.statusText}`);
+    }
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkowników:", error);
+    throw error;
+  }
 }
 
-function saveUsers(users) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users));
+export async function updateUserStatus(id, status) {
+  try {
+    const response = await fetch(`/api/v1/users/${id}/status`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    });
+    if (!response.ok) {
+      throw new Error("Nie udało się zaktualizować statusu użytkownika");
+    }
+    const updatedUser = await response.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Błąd podczas zmiany statusu użytkownika:", error);
+    throw error;
+  }
 }
 
-export function getAllUsers() {
-  return getUsers();
+export async function deleteUserAccount(userId) {
+  try {
+    const announcements = await getAnnouncements();
+    const userAnnouncements = announcements.filter(
+      (a) => Number(a.userId) === Number(userId)
+    );
+    for (const ann of userAnnouncements) {
+      await deleteAnnouncement(ann.id);
+    }
+
+    const response = await fetch(`/api/v1/users/${userId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Nie udało się usunąć użytkownika");
+    }
+    return true;
+  } catch (error) {
+    console.error("Błąd przy usuwaniu użytkownika:", error);
+    throw error;
+  }
 }
 
-export function updateUserStatus(id, status) {
-  const users = getUsers();
-  const updated = users.map((user) =>
-    user.id === id ? { ...user, status } : user
-  );
-  saveUsers(updated);
-  return updated;
-}
+export async function toggleUserStatus(user, isBlocked) {
+  const newStatus = isBlocked ? "ACTIVE" : "BANNED";
+  const updatedUser = await updateUserStatus(user.id, newStatus);
+  if (newStatus === "BANNED") {
+    const announcements = await getAnnouncements();
+    const userAnnouncements = announcements.filter(
+      (a) => Number(a.userId) === Number(user.id)
+    );
+    for (const ann of userAnnouncements) {
+      await deleteAnnouncement(ann.id);
+    }
+  }
 
-// export function deleteUser(id) {
-//   const users = getUsers();
-//   const updated = users.filter((user) => user.id !== id);
-//   saveUsers(updated);
-//   return updated;
-// }
-
-export function deleteUserAccount(userId) {
-  const users = getUsers();
-  const updatedUsers = users.filter((user) => user.id !== userId);
-  saveUsers(updatedUsers);
-  const announcements = getAnnouncements();
-  const updatedAnnouncements = announcements.filter(
-    (announcement) => announcement.userId !== userId
-  );
-  saveAnnouncements(updatedAnnouncements);
-}
-
-export function getUserById(id) {
-  const users = getUsers();
-  const user = users.find((user) => user.id === Number(id));
-  console.log("Fetched Users:", users);
-  console.log("Found User by ID:", user);
-  return user;
-}
-
-export function updateUser(updatedUser) {
-  const users = getUsers();
-  const newUsers = users.map((u) =>
-    u.id === updatedUser.id ? { ...u, ...updatedUser } : u
-  );
-  saveUsers(newUsers);
   return updatedUser;
 }
 
-// export function addUser(newUser) {
-//   const users = getUsers();
-//   const updatedUsers = [...users, newUser];
-//   saveUsers(updatedUsers);
-//   return updatedUsers;
-// }
-
-export function addUser(newUser) {
-  const users = getUsers();
-  const userExists = users.some((user) => user.username === newUser.username);
-  if (userExists) {
-    console.log("Użytkownik o tym username już istnieje");
-    return;
+export async function getUserById(userId) {
+  try {
+    const response = await axios.get(`/api/v1/user-details/${userId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Błąd podczas pobierania użytkownika po ID:", error);
+    throw error;
   }
-  const updatedUsers = [...users, newUser];
-  saveUsers(updatedUsers);
 }
